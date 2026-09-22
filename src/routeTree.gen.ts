@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAcessoBloqueadoRouteImport } from './routes/_authenticated/acesso-bloqueado'
+import { Route as AuthenticatedAjudaRouteImport } from './routes/_authenticated/ajuda'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedTrocarSenhaRouteImport } from './routes/_authenticated/trocar-senha'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +43,16 @@ const AuthenticatedAcessoBloqueadoRoute =
     path: '/acesso-bloqueado',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAjudaRoute = AuthenticatedAjudaRouteImport.update({
+  id: '/ajuda',
+  path: '/ajuda',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTrocarSenhaRoute =
   AuthenticatedTrocarSenhaRouteImport.update({
     id: '/trocar-senha',
@@ -53,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
+  '/ajuda': typeof AuthenticatedAjudaRoute
+  '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
 }
 export interface FileRoutesByTo {
@@ -60,6 +74,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
+  '/ajuda': typeof AuthenticatedAjudaRoute
+  '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
 }
 export interface FileRoutesById {
@@ -69,14 +85,29 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
+  '/_authenticated/ajuda': typeof AuthenticatedAjudaRoute
+  '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/reset-password' | '/acesso-bloqueado' | '/trocar-senha'
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/acesso-bloqueado'
+    | '/ajuda'
+    | '/painel'
+    | '/trocar-senha'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/acesso-bloqueado' | '/trocar-senha'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/acesso-bloqueado'
+    | '/ajuda'
+    | '/painel'
+    | '/trocar-senha'
   id:
     | '__root__'
     | '/'
@@ -84,6 +115,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/acesso-bloqueado'
+    | '/_authenticated/ajuda'
+    | '/_authenticated/painel'
     | '/_authenticated/trocar-senha'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +164,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAcessoBloqueadoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/ajuda': {
+      id: '/_authenticated/ajuda'
+      path: '/ajuda'
+      fullPath: '/ajuda'
+      preLoaderRoute: typeof AuthenticatedAjudaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/trocar-senha': {
       id: '/_authenticated/trocar-senha'
       path: '/trocar-senha'
@@ -143,11 +190,15 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcessoBloqueadoRoute: typeof AuthenticatedAcessoBloqueadoRoute
+  AuthenticatedAjudaRoute: typeof AuthenticatedAjudaRoute
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedTrocarSenhaRoute: typeof AuthenticatedTrocarSenhaRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAcessoBloqueadoRoute: AuthenticatedAcessoBloqueadoRoute,
+  AuthenticatedAjudaRoute: AuthenticatedAjudaRoute,
+  AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedTrocarSenhaRoute: AuthenticatedTrocarSenhaRoute,
 }
 

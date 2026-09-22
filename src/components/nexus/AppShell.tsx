@@ -39,7 +39,7 @@ export function AppShell({
 }: {
   children: ReactNode;
   title: string;
-  description?: string;
+  description?: string | undefined;
 }) {
   const { t, locale, setLocale } = useI18n();
   const navigate = useNavigate();
