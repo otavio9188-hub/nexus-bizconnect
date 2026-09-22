@@ -35,12 +35,21 @@ function ResetPasswordPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 8) return toast.error(t("password.tooShort"));
-    if (password !== confirm) return toast.error(t("password.mismatch"));
+    if (password.length < 8) {
+      toast.error(t("password.tooShort"));
+      return;
+    }
+    if (password !== confirm) {
+      toast.error(t("password.mismatch"));
+      return;
+    }
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
-    if (error) return toast.error(t("error.unknown"));
+    if (error) {
+      toast.error(t("error.unknown"));
+      return;
+    }
     toast.success(t("password.changed"));
     navigate({ to: "/", replace: true });
   }
