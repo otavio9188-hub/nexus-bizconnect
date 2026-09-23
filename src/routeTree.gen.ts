@@ -15,8 +15,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAcessoBloqueadoRouteImport } from './routes/_authenticated/acesso-bloqueado'
 import { Route as AuthenticatedAjudaRouteImport } from './routes/_authenticated/ajuda'
+import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authenticated/auditoria'
+import { Route as AuthenticatedFuncionariosRouteImport } from './routes/_authenticated/funcionarios'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedTrocarSenhaRouteImport } from './routes/_authenticated/trocar-senha'
+import { Route as AuthenticatedNexusIndexRouteImport } from './routes/_authenticated/nexus/index'
+import { Route as AuthenticatedNexusAuditoriaRouteImport } from './routes/_authenticated/nexus/auditoria'
+import { Route as AuthenticatedNexusConfiguracoesRouteImport } from './routes/_authenticated/nexus/configuracoes'
+import { Route as AuthenticatedNexusUsuariosRouteImport } from './routes/_authenticated/nexus/usuarios'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,6 +54,17 @@ const AuthenticatedAjudaRoute = AuthenticatedAjudaRouteImport.update({
   path: '/ajuda',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAuditoriaRoute = AuthenticatedAuditoriaRouteImport.update({
+  id: '/auditoria',
+  path: '/auditoria',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFuncionariosRoute =
+  AuthenticatedFuncionariosRouteImport.update({
+    id: '/funcionarios',
+    path: '/funcionarios',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   id: '/painel',
   path: '/painel',
@@ -59,6 +76,29 @@ const AuthenticatedTrocarSenhaRoute =
     path: '/trocar-senha',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedNexusIndexRoute = AuthenticatedNexusIndexRouteImport.update({
+  id: '/nexus/',
+  path: '/nexus/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNexusAuditoriaRoute =
+  AuthenticatedNexusAuditoriaRouteImport.update({
+    id: '/nexus/auditoria',
+    path: '/nexus/auditoria',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNexusConfiguracoesRoute =
+  AuthenticatedNexusConfiguracoesRouteImport.update({
+    id: '/nexus/configuracoes',
+    path: '/nexus/configuracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNexusUsuariosRoute =
+  AuthenticatedNexusUsuariosRouteImport.update({
+    id: '/nexus/usuarios',
+    path: '/nexus/usuarios',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,8 +106,14 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
   '/ajuda': typeof AuthenticatedAjudaRoute
+  '/auditoria': typeof AuthenticatedAuditoriaRoute
+  '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
+  '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
+  '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
+  '/nexus/usuarios': typeof AuthenticatedNexusUsuariosRoute
+  '/nexus/': typeof AuthenticatedNexusIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,8 +121,14 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
   '/ajuda': typeof AuthenticatedAjudaRoute
+  '/auditoria': typeof AuthenticatedAuditoriaRoute
+  '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
+  '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
+  '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
+  '/nexus/usuarios': typeof AuthenticatedNexusUsuariosRoute
+  '/nexus': typeof AuthenticatedNexusIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,8 +138,14 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
   '/_authenticated/ajuda': typeof AuthenticatedAjudaRoute
+  '/_authenticated/auditoria': typeof AuthenticatedAuditoriaRoute
+  '/_authenticated/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
+  '/_authenticated/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
+  '/_authenticated/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
+  '/_authenticated/nexus/usuarios': typeof AuthenticatedNexusUsuariosRoute
+  '/_authenticated/nexus/': typeof AuthenticatedNexusIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,8 +155,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/acesso-bloqueado'
     | '/ajuda'
+    | '/auditoria'
+    | '/funcionarios'
     | '/painel'
     | '/trocar-senha'
+    | '/nexus/auditoria'
+    | '/nexus/configuracoes'
+    | '/nexus/usuarios'
+    | '/nexus/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -106,8 +170,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/acesso-bloqueado'
     | '/ajuda'
+    | '/auditoria'
+    | '/funcionarios'
     | '/painel'
     | '/trocar-senha'
+    | '/nexus/auditoria'
+    | '/nexus/configuracoes'
+    | '/nexus/usuarios'
+    | '/nexus'
   id:
     | '__root__'
     | '/'
@@ -116,8 +186,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/acesso-bloqueado'
     | '/_authenticated/ajuda'
+    | '/_authenticated/auditoria'
+    | '/_authenticated/funcionarios'
     | '/_authenticated/painel'
     | '/_authenticated/trocar-senha'
+    | '/_authenticated/nexus/auditoria'
+    | '/_authenticated/nexus/configuracoes'
+    | '/_authenticated/nexus/usuarios'
+    | '/_authenticated/nexus/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,6 +247,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAjudaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/auditoria': {
+      id: '/_authenticated/auditoria'
+      path: '/auditoria'
+      fullPath: '/auditoria'
+      preLoaderRoute: typeof AuthenticatedAuditoriaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/funcionarios': {
+      id: '/_authenticated/funcionarios'
+      path: '/funcionarios'
+      fullPath: '/funcionarios'
+      preLoaderRoute: typeof AuthenticatedFuncionariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/painel': {
       id: '/_authenticated/painel'
       path: '/painel'
@@ -185,21 +275,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTrocarSenhaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/nexus/': {
+      id: '/_authenticated/nexus/'
+      path: '/nexus'
+      fullPath: '/nexus/'
+      preLoaderRoute: typeof AuthenticatedNexusIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nexus/auditoria': {
+      id: '/_authenticated/nexus/auditoria'
+      path: '/nexus/auditoria'
+      fullPath: '/nexus/auditoria'
+      preLoaderRoute: typeof AuthenticatedNexusAuditoriaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nexus/configuracoes': {
+      id: '/_authenticated/nexus/configuracoes'
+      path: '/nexus/configuracoes'
+      fullPath: '/nexus/configuracoes'
+      preLoaderRoute: typeof AuthenticatedNexusConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nexus/usuarios': {
+      id: '/_authenticated/nexus/usuarios'
+      path: '/nexus/usuarios'
+      fullPath: '/nexus/usuarios'
+      preLoaderRoute: typeof AuthenticatedNexusUsuariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcessoBloqueadoRoute: typeof AuthenticatedAcessoBloqueadoRoute
   AuthenticatedAjudaRoute: typeof AuthenticatedAjudaRoute
+  AuthenticatedAuditoriaRoute: typeof AuthenticatedAuditoriaRoute
+  AuthenticatedFuncionariosRoute: typeof AuthenticatedFuncionariosRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedTrocarSenhaRoute: typeof AuthenticatedTrocarSenhaRoute
+  AuthenticatedNexusAuditoriaRoute: typeof AuthenticatedNexusAuditoriaRoute
+  AuthenticatedNexusConfiguracoesRoute: typeof AuthenticatedNexusConfiguracoesRoute
+  AuthenticatedNexusUsuariosRoute: typeof AuthenticatedNexusUsuariosRoute
+  AuthenticatedNexusIndexRoute: typeof AuthenticatedNexusIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAcessoBloqueadoRoute: AuthenticatedAcessoBloqueadoRoute,
   AuthenticatedAjudaRoute: AuthenticatedAjudaRoute,
+  AuthenticatedAuditoriaRoute: AuthenticatedAuditoriaRoute,
+  AuthenticatedFuncionariosRoute: AuthenticatedFuncionariosRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedTrocarSenhaRoute: AuthenticatedTrocarSenhaRoute,
+  AuthenticatedNexusAuditoriaRoute: AuthenticatedNexusAuditoriaRoute,
+  AuthenticatedNexusConfiguracoesRoute: AuthenticatedNexusConfiguracoesRoute,
+  AuthenticatedNexusUsuariosRoute: AuthenticatedNexusUsuariosRoute,
+  AuthenticatedNexusIndexRoute: AuthenticatedNexusIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
