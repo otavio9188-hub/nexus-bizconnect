@@ -3,14 +3,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { KeyRound, Search } from "lucide-react";
+import { KeyRound, Plus, Search } from "lucide-react";
 import { AppShell } from "@/components/nexus/AppShell";
 import { TempPasswordDialog } from "@/components/nexus/TempPasswordDialog";
-import { listPlatformUsers, resetUserPasswordAsOwner } from "@/lib/nexus.functions";
+import { createNexusOwner, listPlatformUsers, resetUserPasswordAsOwner } from "@/lib/nexus.functions";
 import { useI18n } from "@/lib/i18n";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -32,6 +41,22 @@ function PlatformUsersPage() {
   const { data, isLoading } = useQuery({ queryKey: ["platform-users"], queryFn: () => fetchUsers() });
   const [query, setQuery] = useState("");
   const [temp, setTemp] = useState<{ email: string; password: string } | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [ownerName, setOwnerName] = useState("");
+  const [ownerEmail, setOwnerEmail] = useState("");
+  const createOwner = useServerFn(createNexusOwner);
+
+  const createOwnerMut = useMutation({
+    mutationFn: () => createOwner({ data: { full_name: ownerName, email: ownerEmail } }),
+    onSuccess: (res) => {
+      setCreateOpen(false);
+      setOwnerName("");
+      setOwnerEmail("");
+      setTemp({ email: res.email, password: res.tempPassword });
+    },
+    onError: (e: unknown) =>
+      toast.error(e instanceof Error && e.message ? e.message : t("error.unknown")),
+  });
 
   const resetMut = useMutation({
     mutationFn: (userId: string) => resetPw({ data: { userId } }),
@@ -47,6 +72,16 @@ function PlatformUsersPage() {
   return (
     <AppShell title={t("nav.users")} description={t("nav.platform")}>
       <div className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold">{t("nav.users")}</h2>
+            <p className="text-sm text-muted-foreground">{t("nexus.usersDescription")}</p>
+          </div>
+          <Button onClick={() => setCreateOpen(true)}>
+            <Plus className="mr-2 size-4" />
+            {t("nexus.newOwner")}
+          </Button>
+        </div>
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -111,6 +146,47 @@ function PlatformUsersPage() {
           )}
         </div>
       </div>
+
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("nexus.newOwner")}</DialogTitle>
+            <DialogDescription>{t("nexus.ownerDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="owner-name">{t("nexus.admin.name")}</Label>
+              <Input
+                id="owner-name"
+                value={ownerName}
+                onChange={(e) => setOwnerName(e.target.value)}
+                placeholder={t("nexus.admin.name")}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="owner-email">{t("nexus.admin.email")}</Label>
+              <Input
+                id="owner-email"
+                type="email"
+                value={ownerEmail}
+                onChange={(e) => setOwnerEmail(e.target.value)}
+                placeholder="admin@empresa.com"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>
+              {t("common.cancel")}
+            </Button>
+            <Button
+              disabled={createOwnerMut.isPending || ownerName.trim().length < 2 || !ownerEmail.includes("@")}
+              onClick={() => createOwnerMut.mutate()}
+            >
+              {createOwnerMut.isPending ? t("common.loading") : t("common.create")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <TempPasswordDialog
         open={!!temp}
