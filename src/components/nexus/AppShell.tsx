@@ -78,6 +78,8 @@ export function AppShell({
     );
   } else if (ctx) {
     nav.push({ to: "/painel", label: t("nav.dashboard"), icon: LayoutDashboard });
+    if (can(ctx, "customers", "VIEW"))
+      nav.push({ to: "/clientes", label: t("nav.customers"), icon: Users });
     if (can(ctx, "employees", "VIEW"))
       nav.push({ to: "/funcionarios", label: t("nav.employees"), icon: Users });
     if (can(ctx, "audit_logs", "VIEW"))
