@@ -95,6 +95,9 @@ const pt: Dict = {
   "nav.users": "Usuários",
   "nav.plans": "Planos",
   "nav.settings": "Configurações",
+  "nexus.usersDescription": "Gerencie os usuários da plataforma e os administradores Nexus.",
+  "nexus.newOwner": "Novo administrador Nexus",
+  "nexus.ownerDescription": "Crie um administrador da plataforma. Uma senha temporária será gerada e deverá ser alterada no primeiro acesso.",
 
   "role.NEXUS_OWNER": "Dono da plataforma",
   "role.COMPANY_ADMIN": "Administrador",
