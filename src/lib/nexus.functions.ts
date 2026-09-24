@@ -271,6 +271,75 @@ export const deleteCompany = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const createNexusOwner = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        full_name: z.string().min(2).max(120),
+        email: z.string().email().max(255),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const actor = await requireOwner(context.supabase, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const tempPassword = generateTempPassword();
+    const { data: created, error: userError } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: tempPassword,
+      email_confirm: true,
+    });
+
+    if (userError || !created?.user) {
+      throw new AppError(
+        "OWNER_FAILED",
+        "Não foi possível criar o administrador. O e-mail pode já estar em uso.",
+      );
+    }
+
+    const ownerId = created.user.id;
+    const { error: profileError } = await supabaseAdmin.from("profiles").insert({
+      id: ownerId,
+      company_id: null,
+      full_name: data.full_name,
+      email: data.email,
+      status: "ACTIVE",
+      must_change_password: true,
+    });
+
+    if (profileError) {
+      await supabaseAdmin.auth.admin.deleteUser(ownerId);
+      throw new AppError("OWNER_PROFILE_FAILED", "Não foi possível criar o perfil do administrador.");
+    }
+
+    const { error: roleError } = await supabaseAdmin.from("user_roles").insert({
+      user_id: ownerId,
+      company_id: null,
+      role: "NEXUS_OWNER",
+    });
+
+    if (roleError) {
+      await supabaseAdmin.from("profiles").delete().eq("id", ownerId);
+      await supabaseAdmin.auth.admin.deleteUser(ownerId);
+      throw new AppError("OWNER_ROLE_FAILED", "Não foi possível atribuir o acesso de administrador.");
+    }
+
+    await writeAudit(supabaseAdmin, {
+      company_id: null,
+      user_id: context.userId,
+      user_email: actor.profile.email,
+      action: "NEXUS_OWNER_CREATED",
+      module: "users",
+      record_id: ownerId,
+      record_label: data.email,
+      new_value: { full_name: data.full_name, email: data.email, role: "NEXUS_OWNER" },
+    });
+
+    return { tempPassword, email: data.email };
+  });
+
 export const listPlatformUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
