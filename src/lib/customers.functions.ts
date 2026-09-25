@@ -37,6 +37,7 @@ async function requireCustomerPermission(
 ) {
   const ctx = await getCustomerContext(supabase, userId);
   const allowed =
+    ctx.isNexusOwner ||
     ctx.isCompanyAdmin ||
     ctx.permissions.some((p) => p.module === "customers" && p.action === action);
   if (!allowed) throw FORBIDDEN();
