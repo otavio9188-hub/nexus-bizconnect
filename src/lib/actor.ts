@@ -31,6 +31,8 @@ export async function loadSessionContext(supabase: Db, userId: string): Promise<
 
   if (!profile) throw new AppError("NO_PROFILE", "Perfil de usuário não encontrado.");
 
+  const roleList = (roles ?? []).map((r) => r.role as AppRole);
+
   let activeCompanyId: string | null = profile.company_id;
   if (roleList.includes("NEXUS_OWNER")) {
     const { data: ownerProfile } = await (supabase as any)
@@ -50,8 +52,6 @@ export async function loadSessionContext(supabase: Db, userId: string): Promise<
       .maybeSingle();
     company = data ?? null;
   }
-
-  const roleList = (roles ?? []).map((r) => r.role as AppRole);
 
   return {
     profile,
