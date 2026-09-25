@@ -42,6 +42,21 @@ export const listCashTransactions=createServerFn({method:"GET"}).middleware([req
   return data??[];
 });
 
+export const listFinanceCustomers=createServerFn({method:"GET"}).middleware([requireSupabaseAuth]).handler(async({context})=>{
+  const ctx=await ctxFor(context.supabase,context.userId,"VIEW");
+  const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
+  const {data,error}=await supabaseAdmin.from("customers").select("id,name").eq("company_id",ctx.activeCompanyId!).eq("status","ACTIVE").order("name",{ascending:true});
+  if(error)throw new AppError("LIST_FAILED","Não foi possível carregar os clientes financeiros.");
+  return data??[];
+});
+export const listFinanceSuppliers=createServerFn({method:"GET"}).middleware([requireSupabaseAuth]).handler(async({context})=>{
+  const ctx=await ctxFor(context.supabase,context.userId,"VIEW");
+  const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
+  const {data,error}=await supabaseAdmin.from("suppliers").select("id,name").eq("company_id",ctx.activeCompanyId!).eq("status","ACTIVE").order("name",{ascending:true});
+  if(error)throw new AppError("LIST_FAILED","Não foi possível carregar os fornecedores financeiros.");
+  return data??[];
+});
+
 export const createReceivable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>schema.parse(v)).handler(async({data,context})=>{
   const ctx=await ctxFor(context.supabase,context.userId,"CREATE");
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
