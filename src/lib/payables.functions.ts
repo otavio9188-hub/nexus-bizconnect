@@ -32,7 +32,32 @@ export const listPayables=createServerFn({method:"GET"}).middleware([requireSupa
   const {data,error}=await supabaseAdmin.from("accounts_payable").select("*, suppliers(name)").eq("company_id",ctx.activeCompanyId!).order("due_date",{ascending:true});
   if(error)throw new AppError("LIST_FAILED","Não foi possível carregar contas a pagar.");
   const today=new Date().toISOString().slice(0,10);
-  return (data??[]).map((row:any)=>row.status==="PENDING"&&row.due_date<today?{...row,status:"OVERDUE"}:row);
+  const payables=(data??[]).map((row:any)=>row.status==="PENDING"&&row.due_date<today?{...row,status:"OVERDUE"}:row);
+
+  // Comissões são obrigações financeiras da empresa e também aparecem
+  // em "Contas a pagar", sem criar uma segunda obrigação no banco.
+  const {data:commissions,error:commissionError}=await supabaseAdmin
+    .from("commission_payments")
+    .select("id, affiliate_id, amount, status, due_date, paid_at, notes, affiliates(full_name)")
+    .eq("company_id",ctx.activeCompanyId!)
+    .order("due_date",{ascending:true});
+  if(commissionError)throw new AppError("LIST_FAILED","Não foi possível carregar as comissões a pagar.");
+
+  const commissionPayables=(commissions??[]).map((row:any)=>({
+    id:`commission-${row.id}`,
+    description:"Comissão"+(row.notes?" - "+row.notes:""),
+    amount:Number(row.amount),
+    due_date:row.due_date||row.paid_at||today,
+    status:row.status==="PENDING"&&row.due_date&&row.due_date<today?"OVERDUE":row.status,
+    notes:row.notes,
+    supplier_id:null,
+    suppliers:null,
+    source:"commission",
+    commission_id:row.id,
+    commission_affiliate_name:row.affiliates?.full_name||"Filiado"
+  }));
+
+  return [...payables,...commissionPayables].sort((a:any,b:any)=>String(a.due_date).localeCompare(String(b.due_date)));
 });
 
 export const createPayable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>schema.parse(v)).handler(async({data,context})=>{
