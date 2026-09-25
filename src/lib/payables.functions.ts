@@ -31,7 +31,8 @@ export const listPayables=createServerFn({method:"GET"}).middleware([requireSupa
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const {data,error}=await supabaseAdmin.from("accounts_payable").select("*, suppliers(name)").eq("company_id",ctx.activeCompanyId!).order("due_date",{ascending:true});
   if(error)throw new AppError("LIST_FAILED","Não foi possível carregar contas a pagar.");
-  return data??[];
+  const today=new Date().toISOString().slice(0,10);
+  return (data??[]).map((row:any)=>row.status==="PENDING"&&row.due_date<today?{...row,status:"OVERDUE"}:row);
 });
 
 export const createPayable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>schema.parse(v)).handler(async({data,context})=>{
