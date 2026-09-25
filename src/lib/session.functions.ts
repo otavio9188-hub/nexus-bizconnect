@@ -83,14 +83,10 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
       throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
     }
 
-    // Use the authenticated Supabase client. This keeps the request inside the
-    // user's session and avoids depending on a server-only service-role secret.
-    // Keep this selector compatible with databases where the optional
-    // Estúdio Nexus `kind` migration has not been applied yet.
-    // The base company fields exist since the initial ERP migration.
+    // `kind` is part of the company schema and distinguishes the internal Estúdio Nexus tenant from client companies.
     const { data, error } = await context.supabase
       .from("companies")
-      .select("id, name, status")
+      .select("id, name, status, kind")
       .order("name", { ascending: true });
 
     if (error) {
@@ -110,7 +106,7 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
       id: company.id,
       name: company.name,
       status: company.status,
-      kind: null,
+      kind: company.kind,
     }));
   });
 
