@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "qa": "node scripts/nexus-qa.mjs"
+    "qa": "node scripts/nexus-qa.mjs",
+    "bootstrap:owner": "node scripts/bootstrap-nexus-owner.mjs"
   },
   "overrides": {
     "rolldown": "1.2.1"
