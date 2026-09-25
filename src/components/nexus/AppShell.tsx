@@ -134,7 +134,10 @@ export function AppShell({
       </div>
       <nav className="flex-1 space-y-1.5 px-3">
         {nav.map((item) => {
-          const active = pathname === item.to || pathname.startsWith(item.to + "/");
+          // Cada item representa uma seção própria. Comparar a rota exata
+          // evita que "/estudio" fique ativo junto com "/estudio/financeiro",
+          // "/estudio/comissoes", etc.
+          const active = pathname === item.to;
           return (
             <Link
               key={item.to}
