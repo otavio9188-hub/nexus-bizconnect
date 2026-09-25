@@ -16,6 +16,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAcessoBloqueadoRouteImport } from './routes/_authenticated/acesso-bloqueado'
 import { Route as AuthenticatedAjudaRouteImport } from './routes/_authenticated/ajuda'
 import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authenticated/auditoria'
+import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedFuncionariosRouteImport } from './routes/_authenticated/funcionarios'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedTrocarSenhaRouteImport } from './routes/_authenticated/trocar-senha'
@@ -58,6 +59,11 @@ const AuthenticatedAjudaRoute = AuthenticatedAjudaRouteImport.update({
 const AuthenticatedAuditoriaRoute = AuthenticatedAuditoriaRouteImport.update({
   id: '/auditoria',
   path: '/auditoria',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedFuncionariosRoute =
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
   '/ajuda': typeof AuthenticatedAjudaRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
+  '/clientes': typeof AuthenticatedClientesRoute
   '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
   '/ajuda': typeof AuthenticatedAjudaRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
+  '/clientes': typeof AuthenticatedClientesRoute
   '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/_authenticated/acesso-bloqueado': typeof AuthenticatedAcessoBloqueadoRoute
   '/_authenticated/ajuda': typeof AuthenticatedAjudaRoute
   '/_authenticated/auditoria': typeof AuthenticatedAuditoriaRoute
+  '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/acesso-bloqueado'
     | '/ajuda'
     | '/auditoria'
+    | '/clientes'
     | '/funcionarios'
     | '/painel'
     | '/trocar-senha'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/acesso-bloqueado'
     | '/ajuda'
     | '/auditoria'
+    | '/clientes'
     | '/funcionarios'
     | '/painel'
     | '/trocar-senha'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/_authenticated/acesso-bloqueado'
     | '/_authenticated/ajuda'
     | '/_authenticated/auditoria'
+    | '/_authenticated/clientes'
     | '/_authenticated/funcionarios'
     | '/_authenticated/painel'
     | '/_authenticated/trocar-senha'
@@ -267,6 +279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAuditoriaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/clientes': {
+      id: '/_authenticated/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AuthenticatedClientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/funcionarios': {
       id: '/_authenticated/funcionarios'
       path: '/funcionarios'
@@ -330,6 +349,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcessoBloqueadoRoute: typeof AuthenticatedAcessoBloqueadoRoute
   AuthenticatedAjudaRoute: typeof AuthenticatedAjudaRoute
   AuthenticatedAuditoriaRoute: typeof AuthenticatedAuditoriaRoute
+  AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedFuncionariosRoute: typeof AuthenticatedFuncionariosRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedTrocarSenhaRoute: typeof AuthenticatedTrocarSenhaRoute
@@ -344,6 +364,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAcessoBloqueadoRoute: AuthenticatedAcessoBloqueadoRoute,
   AuthenticatedAjudaRoute: AuthenticatedAjudaRoute,
   AuthenticatedAuditoriaRoute: AuthenticatedAuditoriaRoute,
+  AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedFuncionariosRoute: AuthenticatedFuncionariosRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedTrocarSenhaRoute: AuthenticatedTrocarSenhaRoute,
