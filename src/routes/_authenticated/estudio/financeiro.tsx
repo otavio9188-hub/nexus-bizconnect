@@ -30,7 +30,8 @@ function FinancePage(){
  const cp=useServerFn(createPayable), up=useServerFn(updatePayable), dp=useServerFn(deletePayable);
  const r=useQuery({queryKey:["studio-finance-receivables"],queryFn:()=>rf()});
  const p=useQuery({queryKey:["studio-finance-payables"],queryFn:()=>pf()});
- const customers=useQuery({queryKey:["studio-finance-customers"],queryFn:()=>cf()});\n const suppliers=useQuery({queryKey:["studio-finance-suppliers"],queryFn:()=>sf()});
+ const customers=useQuery({queryKey:["studio-finance-customers"],queryFn:()=>cf()});
+ const suppliers=useQuery({queryKey:["studio-finance-suppliers"],queryFn:()=>sf()});
  const rec=r.data??[], pay=p.data??[];
  const [tab,setTab]=useState<Kind>("receivable"),[search,setSearch]=useState(""),[status,setStatus]=useState("ALL");
  const [open,setOpen]=useState(false),[editing,setEditing]=useState<any|null>(null),[form,setForm]=useState<Form>(empty("receivable")), [busy,setBusy]=useState(false);
