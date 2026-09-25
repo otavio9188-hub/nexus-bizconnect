@@ -14,6 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
+      [table: string]: any
       accounts_payable: {
         Row: {
           amount: number
@@ -83,6 +84,7 @@ export type Database = {
       }
       accounts_receivable: {
         Row: {
+          [key: string]: any
           amount: number
           company_id: string
           created_at: string
@@ -300,6 +302,7 @@ export type Database = {
       }
       companies: {
         Row: {
+          [key: string]: any
           address: string | null
           city: string | null
           cnpj: string | null
@@ -1055,6 +1058,7 @@ export type Database = {
     }
     Enums: {
       app_role: "NEXUS_OWNER" | "COMPANY_ADMIN" | "MANAGER" | "EMPLOYEE"
+      company_kind: "STUDIO_NEXUS" | "CLIENT"
       company_status: "ACTIVE" | "SUSPENDED" | "BLOCKED"
       doc_status: "DRAFT" | "COMPLETED" | "CANCELLED"
       finance_status: "PENDING" | "PAID" | "OVERDUE" | "CANCELLED"
@@ -1190,6 +1194,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["NEXUS_OWNER", "COMPANY_ADMIN", "MANAGER", "EMPLOYEE"],
+      company_kind: ["STUDIO_NEXUS", "CLIENT"],
       company_status: ["ACTIVE", "SUSPENDED", "BLOCKED"],
       doc_status: ["DRAFT", "COMPLETED", "CANCELLED"],
       finance_status: ["PENDING", "PAID", "OVERDUE", "CANCELLED"],
