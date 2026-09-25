@@ -89,7 +89,6 @@ export type Database = {
           [key: string]: any
           contract_id: string | null
           amount: number
-          contract_id: string | null
           company_id: string
           created_at: string
           customer_id: string | null
