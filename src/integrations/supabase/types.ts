@@ -607,9 +607,9 @@ export type Database = {
         Relationships:[{foreignKeyName:"affiliates_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"];}];
       }
       contracts: {
-        Row:{id:string;company_id:string;customer_id:string;affiliate_id:string|null;title:string;service:string;start_date:string;end_date:string|null;monthly_value:number;commission_percent:number;notes:string|null;status:string;created_at:string;updated_at:string};
-        Insert:{id?:string;company_id:string;customer_id:string;affiliate_id?:string|null;title:string;service:string;start_date:string;end_date?:string|null;monthly_value?:number;commission_percent?:number;notes?:string|null;status?:string;created_at?:string;updated_at?:string};
-        Update:{id?:string;company_id?:string;customer_id?:string;affiliate_id?:string|null;title?:string;service?:string;start_date?:string;end_date?:string|null;monthly_value?:number;commission_percent?:number;notes?:string|null;status?:string;created_at?:string;updated_at?:string};
+        Row:{id:string;company_id:string;customer_id:string|null;affiliate_id:string|null;title:string;service:string|null;start_date:string|null;end_date:string|null;monthly_value:number;commission_percent:number;commission_value:number;notes:string|null;status:string;created_at:string;updated_at:string};
+        Insert:{id?:string;company_id:string;customer_id?:string|null;affiliate_id?:string|null;title:string;service?:string|null;start_date?:string|null;end_date?:string|null;monthly_value?:number;commission_value?:number;commission_percent?:number;notes?:string|null;status?:string;created_at?:string;updated_at?:string};
+        Update:{id?:string;company_id?:string;customer_id?:string|null;affiliate_id?:string|null;title?:string;service?:string|null;start_date?:string|null;end_date?:string|null;monthly_value?:number;commission_value?:number;commission_percent?:number;notes?:string|null;status?:string;created_at?:string;updated_at?:string};
         Relationships:[
           {foreignKeyName:"contracts_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"]},
           {foreignKeyName:"contracts_customer_id_fkey";columns:["customer_id"];isOneToOne:false;referencedRelation:"customers";referencedColumns:["id"]},
@@ -637,9 +637,9 @@ export type Database = {
         ];
       }
       investments: {
-        Row:{id:string;company_id:string;description:string;current_value:number;initial_value:number;invested_at:string;status:string;notes:string|null;created_at:string;updated_at:string};
-        Insert:{id?:string;company_id:string;description:string;current_value:number;initial_value:number;invested_at:string;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
-        Update:{id?:string;company_id?:string;description?:string;current_value?:number;initial_value?:number;invested_at?:string;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
+        Row:{id:string;company_id:string;name:string;type:string|null;institution:string|null;invested_amount:number;current_value:number;invested_at:string;status:string;notes:string|null;created_at:string;updated_at:string};
+        Insert:{id?:string;company_id:string;name:string;type?:string|null;institution?:string|null;invested_amount?:number;current_value?:number;invested_at?:string;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
+        Update:{id?:string;company_id?:string;name?:string;type?:string|null;institution?:string|null;invested_amount?:number;current_value?:number;invested_at?:string;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
         Relationships:[{foreignKeyName:"investments_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"];}];
       }
       fiscal_documents: {
