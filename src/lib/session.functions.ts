@@ -69,53 +69,46 @@ export const touchLogin = createServerFn({ method: "POST" })
 export const listNexusCompanies = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: roles } = await context.supabase
+    const { data: roles, error: rolesError } = await context.supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", context.userId);
+
+    if (rolesError) {
+      console.error("[Nexus] Could not load user roles:", rolesError);
+      throw new AppError("ROLES_FAILED", "Não foi possível validar as permissões do usuário.");
+    }
+
     if (!(roles ?? []).some((r) => r.role === "NEXUS_OWNER")) {
       throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
     }
-    // Depois de validar o papel NEXUS_OWNER, usamos o cliente administrativo
-    // para listar as empresas. Isso evita depender de políticas RLS da tabela
-    // companies que podem variar entre ambientes/migrations.
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    try {
-      // Use a wildcard select here because this endpoint is a Nexus-owner
-      // control-plane query. This keeps the selector resilient if the local
-      // generated Supabase types are ahead of the deployed schema.
-      const { data, error } = await supabaseAdmin
-        .from("companies")
-        .select("*")
-        .order("name", { ascending: true });
 
-      if (error) {
-        console.error("[Nexus] listNexusCompanies failed:", {
-          code: error.code,
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-        });
-        throw new AppError(
-          "COMPANIES_FAILED",
-          "Não foi possível carregar as empresas. Verifique a conexão com o banco de dados.",
-        );
-      }
+    // Use the authenticated Supabase client. This keeps the request inside the
+    // user's session and avoids depending on a server-only service-role secret.
+    const { data, error } = await context.supabase
+      .from("companies")
+      .select("id, name, status, kind")
+      .order("name", { ascending: true });
 
-      return (data ?? []).map((company) => ({
-        id: company.id,
-        name: company.name,
-        status: company.status,
-        kind: company.kind ?? null,
-      }));
-    } catch (error) {
-      if (error instanceof AppError) throw error;
-      console.error("[Nexus] listNexusCompanies unexpected error:", error);
+    if (error) {
+      console.error("[Nexus] listNexusCompanies failed:", {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
       throw new AppError(
         "COMPANIES_FAILED",
-        "Não foi possível carregar as empresas. Verifique a conexão com o banco de dados.",
+        `Não foi possível carregar as empresas (Supabase: ${error.code}).`,
       );
     }
+
+    return (data ?? []).map((company) => ({
+      id: company.id,
+      name: company.name,
+      status: company.status,
+      kind: company.kind ?? null,
+    }));
   });
 
 export const setActiveCompany = createServerFn({ method: "POST" })
