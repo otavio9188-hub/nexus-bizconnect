@@ -158,7 +158,7 @@ export const getStudioDashboard = createServerFn({ method: "GET" })
         context.supabase.from("cash_transactions").select("type,amount").eq("company_id", companyId).gte("transaction_date", startDate).eq("status", "PAID"),
         context.supabase.from("accounts_receivable").select("amount,status").eq("company_id", companyId),
         context.supabase.from("accounts_payable").select("amount,status").eq("company_id", companyId),
-        context.supabase.from("investments").select("initial_value,current_value").eq("company_id", companyId).eq("status", "ACTIVE"),
+        context.supabase.from("investments").select("invested_amount,current_value").eq("company_id", companyId).eq("status", "ACTIVE"),
       ]);
 
     const income = (cash.data ?? []).filter((x) => x.type === "INCOME").reduce((s, x) => s + Number(x.amount || 0), 0);
