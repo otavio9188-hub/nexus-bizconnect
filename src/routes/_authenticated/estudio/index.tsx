@@ -61,6 +61,8 @@ function StudioDashboard() {
     queryFn: () => dashboard(),
     refetchInterval: 60_000,
   });
+  // Loading and error states return early below, so data is present here.
+  const data = query.data!;
 
   return (
     <AppShell
