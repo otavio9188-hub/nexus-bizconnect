@@ -104,6 +104,8 @@ function CustomersPage() {
   const { data: customers, isLoading } = useQuery({
     queryKey: ["customers"],
     queryFn: () => fetchCustomers(),
+    enabled: !!ctx && can(ctx, "customers", "VIEW"),
+    retry: false,
   });
 
   const [search, setSearch] = useState("");
