@@ -155,3 +155,159 @@
     letter-spacing: -0.02em;
   }
 }
+
+
+/* Nexus visual system — v1.1 */
+@keyframes nexusGlowDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: .55; }
+  50% { transform: translate3d(2%, -1%, 0) scale(1.04); opacity: .78; }
+}
+
+@keyframes nexusLineDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-7deg); opacity: .18; }
+  50% { transform: translate3d(1.5%, -1%, 0) rotate(-5deg); opacity: .34; }
+}
+
+.nexus-app-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 78% 8%, oklch(0.42 0.16 164 / 0.16), transparent 28%),
+    radial-gradient(circle at 12% 82%, oklch(0.38 0.14 158 / 0.14), transparent 30%),
+    linear-gradient(135deg, oklch(0.075 0.025 165), oklch(0.045 0.018 180) 48%, oklch(0.065 0.03 155));
+}
+
+.nexus-app-shell::before,
+.nexus-app-shell::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.nexus-app-shell::before {
+  width: 75vw;
+  height: 22vh;
+  right: -22vw;
+  top: 4vh;
+  border: 1px solid oklch(0.72 0.19 164 / 0.22);
+  box-shadow:
+    0 0 45px oklch(0.62 0.19 164 / 0.12),
+    inset 0 0 45px oklch(0.62 0.19 164 / 0.05);
+  transform: rotate(-9deg);
+  animation: nexusLineDrift 10s ease-in-out infinite;
+}
+
+.nexus-app-shell::after {
+  width: 70vw;
+  height: 28vh;
+  left: -24vw;
+  bottom: -7vh;
+  border: 1px solid oklch(0.68 0.2 154 / 0.25);
+  box-shadow: 0 0 55px oklch(0.62 0.2 154 / 0.14);
+  transform: rotate(-8deg);
+  animation: nexusLineDrift 13s ease-in-out infinite reverse;
+}
+
+.nexus-sidebar {
+  background:
+    linear-gradient(180deg, oklch(0.065 0.026 165 / 0.96), oklch(0.045 0.018 175 / 0.98)),
+    radial-gradient(circle at 20% 20%, oklch(0.48 0.18 160 / 0.08), transparent 45%);
+  border-right: 1px solid oklch(0.68 0.15 165 / 0.14);
+  box-shadow: 18px 0 60px oklch(0 0 0 / 0.28);
+}
+
+.nexus-header {
+  background: oklch(0.055 0.02 170 / 0.78);
+  border-color: oklch(0.68 0.16 165 / 0.15) !important;
+  box-shadow: 0 10px 40px oklch(0 0 0 / 0.16);
+}
+
+.nexus-main {
+  position: relative;
+  background:
+    radial-gradient(circle at 92% 0%, oklch(0.48 0.18 164 / 0.08), transparent 25%),
+    radial-gradient(circle at 0% 100%, oklch(0.45 0.16 154 / 0.07), transparent 27%);
+}
+
+.nexus-main::before {
+  content: "";
+  position: absolute;
+  width: 42rem;
+  height: 18rem;
+  top: -7rem;
+  right: -10rem;
+  border-radius: 50%;
+  background: oklch(0.62 0.2 164 / 0.08);
+  filter: blur(55px);
+  pointer-events: none;
+  animation: nexusGlowDrift 12s ease-in-out infinite;
+}
+
+.nexus-content {
+  position: relative;
+  z-index: 1;
+}
+
+.nexus-nav-item {
+  border: 1px solid transparent;
+  transition: all 180ms ease;
+}
+
+.nexus-nav-item:hover {
+  background: oklch(0.46 0.12 164 / 0.09);
+  border-color: oklch(0.66 0.18 164 / 0.12);
+  box-shadow: inset 0 0 22px oklch(0.5 0.18 164 / 0.04);
+}
+
+.nexus-nav-item[data-active="true"] {
+  color: white;
+  background: linear-gradient(100deg, oklch(0.64 0.19 164 / 0.92), oklch(0.54 0.17 150 / 0.72));
+  border-color: oklch(0.78 0.16 164 / 0.42);
+  box-shadow:
+    0 0 24px oklch(0.62 0.2 164 / 0.16),
+    inset 0 1px 0 oklch(1 0 0 / 0.14);
+}
+
+.nexus-glass {
+  background: linear-gradient(135deg, oklch(0.12 0.035 170 / 0.74), oklch(0.075 0.025 180 / 0.62));
+  border-color: oklch(0.68 0.16 164 / 0.14);
+  box-shadow:
+    0 20px 60px oklch(0 0 0 / 0.22),
+    inset 0 1px 0 oklch(1 0 0 / 0.045);
+  backdrop-filter: blur(18px);
+}
+
+.nexus-brand-button {
+  background: linear-gradient(100deg, oklch(0.7 0.19 164), oklch(0.6 0.18 151));
+  color: white;
+  border: 1px solid oklch(0.82 0.15 164 / 0.45);
+  box-shadow: 0 10px 30px oklch(0.58 0.2 160 / 0.18);
+}
+
+.nexus-brand-button:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 12px 34px oklch(0.58 0.2 160 / 0.28);
+}
+
+.nexus-brand-outline {
+  border-color: oklch(0.68 0.18 164 / 0.35) !important;
+  background: oklch(0.08 0.025 170 / 0.58);
+}
+
+.nexus-brand-outline:hover {
+  background: oklch(0.45 0.14 164 / 0.1);
+  border-color: oklch(0.72 0.19 164 / 0.52) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexus-app-shell::before,
+  .nexus-app-shell::after,
+  .nexus-main::before {
+    animation: none;
+  }
+}
