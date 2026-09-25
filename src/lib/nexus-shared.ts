@@ -21,6 +21,7 @@ export type SessionCompany = {
 export type SessionContext = {
   profile: SessionProfile;
   company: SessionCompany;
+  activeCompanyId: string | null;
   roles: AppRole[];
   permissions: PermissionPair[];
   isNexusOwner: boolean;
