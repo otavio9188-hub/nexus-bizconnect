@@ -76,8 +76,7 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
     if (!(roles ?? []).some((r) => r.role === "NEXUS_OWNER")) {
       throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
     }
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await context.supabase
       .from("companies")
       .select("id, name, status, kind")
       .order("name");
