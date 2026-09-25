@@ -56,6 +56,7 @@ export async function loadSessionContext(supabase: Db, userId: string): Promise<
   return {
     profile,
     company,
+    activeCompanyId,
     roles: roleList,
     permissions: (perms ?? []).map((p) => ({
       module: p.module,
