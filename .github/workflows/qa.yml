@@ -19,7 +19,7 @@ jobs:
         run: npm install
       - name: Static QA agent
         run: npm run qa
-      - name: Lint
-        run: npx eslint . --rule 'prettier/prettier: off'
+      - name: Typecheck
+        run: npx tsc --noEmit
       - name: Production build
         run: npm run build
