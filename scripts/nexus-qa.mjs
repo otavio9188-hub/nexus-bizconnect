@@ -8,7 +8,7 @@ const checks=[
   ["Contracts","src/lib/contracts.functions.ts",["listContracts","createContract","updateContract","deleteContract"]],
   ["Content","src/lib/content.functions.ts",["listContent","createContent","updateContent","deleteContent"]],
   ["Affiliates","src/lib/affiliates.functions.ts",["listAffiliates","createAffiliate","updateAffiliate","deleteAffiliate"]],
-  ["Commissions","src/lib/commissions.functions.ts",["listCommissions","createCommission","updateCommission","deleteCommission"]],
+  ["Commissions","src/lib/commissions.functions.ts",["listCommissionPayments","createCommissionPayment","updateCommissionPayment","deleteCommissionPayment"]],
   ["Receivables","src/lib/finance.functions.ts",["listReceivables","createReceivable","updateReceivable","deleteReceivable","listCashTransactions"]],
   ["Payables","src/lib/payables.functions.ts",["listPayables","createPayable","updatePayable","deletePayable"]],
   ["Finance UI","src/routes/_authenticated/estudio/financeiro.tsx",["A receber","A pagar","Novo lançamento"]],
@@ -31,7 +31,7 @@ const financePage=readFileSync(join(root,"src/routes/_authenticated/estudio/fina
 const invariants=[
   ["Finance tenant isolation",finance.includes('eq("company_id",ctx.activeCompanyId!)')],
   ["Payables tenant isolation",payables.includes('eq("company_id",ctx.activeCompanyId!)')],
-  ["Receivable cash sync",finance.includes('reference_type="accounts_receivable"')],
+  ["Receivable cash sync",finance.includes('referenceType="accounts_receivable"')],
   ["Payable cash sync",payables.includes('referenceType="accounts_payable"')],
   ["Finance delete cleanup",finance.includes('from("cash_transactions").delete()')],
   ["Payable delete cleanup",payables.includes('from("cash_transactions").delete()')],
