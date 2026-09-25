@@ -116,7 +116,7 @@ export function AppShell({
     .toUpperCase();
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+    <div className="nexus-sidebar flex h-full flex-col text-sidebar-foreground">
       <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-5">
         <Logo />
         <button
@@ -159,7 +159,7 @@ export function AppShell({
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="nexus-app-shell flex min-h-screen bg-background">
       <aside className="hidden w-64 shrink-0 md:block">
         <div className="fixed inset-y-0 w-64">{sidebar}</div>
       </aside>
@@ -172,7 +172,7 @@ export function AppShell({
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-card/90 px-4 backdrop-blur md:px-8">
+        <header className="nexus-header sticky top-0 z-30 flex h-16 items-center gap-3 border-b px-4 backdrop-blur-xl md:px-8">
           <button className="md:hidden" onClick={() => setMobileOpen(true)} aria-label="Menu">
             <Menu className="size-5" />
           </button>
@@ -186,7 +186,7 @@ export function AppShell({
           {ctx?.isNexusOwner && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="max-w-48 gap-1 text-xs">
+                <Button variant="outline" size="sm" className="nexus-brand-outline max-w-48 gap-1 text-xs">
                   <Building2 className="size-3.5" />
                   <span className="truncate">{ctx.company?.name ?? "Nexus — Administração"}</span>
                   <ChevronDown className="size-3" />
@@ -264,7 +264,7 @@ export function AppShell({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 rounded-full border bg-background py-1 pl-1 pr-3 text-sm hover:bg-accent">
+              <button className="nexus-brand-outline flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-sm hover:bg-accent">
                 <span className="flex size-7 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
                   {initials}
                 </span>
@@ -296,7 +296,7 @@ export function AppShell({
           </DropdownMenu>
         </header>
 
-        <main className="flex-1 p-4 md:p-8">
+        <main className="nexus-main flex-1 p-4 md:p-8">\n          <div className="nexus-content">
           {isLoading ? (
             <div className="space-y-3">
               <Skeleton className="h-9 w-56" />
