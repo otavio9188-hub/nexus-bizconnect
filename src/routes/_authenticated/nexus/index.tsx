@@ -31,18 +31,18 @@ function NexusDashboard() {
   return (
     <AppShell title={t("nexus.title")} description={t("nav.platform")}>
       <div className="space-y-6">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
           {cards.map((c) => (
-            <Card key={c.label}>
-              <CardContent className="space-y-2 p-5">
+            <Card key={c.label} className="nexus-glass overflow-hidden transition-transform duration-200 hover:-translate-y-0.5">
+              <CardContent className="space-y-3 p-5">
                 <div className="flex items-center justify-between text-muted-foreground">
-                  <span className="text-xs font-medium uppercase tracking-wide">{c.label}</span>
-                  <c.icon className="size-4" />
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{c.label}</span>
+                  <c.icon className="size-4 text-emerald-300/70" />
                 </div>
                 {statsQuery.isLoading ? (
                   <Skeleton className="h-8 w-12" />
                 ) : (
-                  <div className="text-2xl font-semibold">{c.value ?? 0}</div>
+                  <div className="text-3xl font-semibold tracking-tight">{c.value ?? 0}</div>
                 )}
               </CardContent>
             </Card>
@@ -52,8 +52,8 @@ function NexusDashboard() {
         <Card>
           <CardContent className="p-5">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold">{t("audit.title")}</h2>
-              <Link to="/nexus/auditoria" className="text-xs text-primary hover:underline">
+              <div>\n                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Atividade recente</p>\n                <h2 className="mt-1 text-base font-semibold">{t("audit.title")}</h2>\n              </div>
+              <Link to="/nexus/auditoria" className="text-xs font-medium text-emerald-300 hover:text-emerald-200">
                 {t("common.all")}
               </Link>
             </div>
@@ -66,7 +66,7 @@ function NexusDashboard() {
                 {(logsQuery.data ?? []).slice(0, 8).map((l) => (
                   <li key={l.id} className="flex flex-wrap justify-between gap-2 py-2">
                     <span>
-                      <span className="font-mono text-xs text-primary">{l.action}</span>{" "}
+                      <span className="font-mono text-xs text-emerald-300/80">{l.action}</span>{" "}
                       {l.record_label ?? ""}
                     </span>
                     <span className="text-xs text-muted-foreground">
