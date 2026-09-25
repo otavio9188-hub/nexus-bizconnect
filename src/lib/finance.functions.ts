@@ -76,7 +76,7 @@ export const updateReceivable=createServerFn({method:"POST"}).middleware([requir
   if(!before)throw new AppError("NOT_FOUND","Conta a receber não encontrada.");
   const {id:rid,...fields}=data;
   const payload={...fields,customer_id:fields.customer_id||null,receipt_date:fields.status==="PAID"?(fields.receipt_date||before.receipt_date||new Date().toISOString().slice(0,10)):null};
-  const {data:row,error}=await supabaseAdmin.from("accounts_receivable").update(payload).eq("id",rid).eq("company_id",ctx.activeCompanyId!).select("*").single();
+  const {data:row,error}=await supabaseAdmin.from("accounts_receivable").update(payload as any).eq("id",rid).eq("company_id",ctx.activeCompanyId!).select("*").single();
   if(error||!row)throw new AppError("UPDATE_FAILED","Não foi possível atualizar a conta.");
   await syncCash(supabaseAdmin,row,context.userId,ctx.activeCompanyId!);
   await writeAudit(supabaseAdmin,{company_id:ctx.activeCompanyId,user_id:context.userId,user_email:ctx.profile.email,action:"RECEIVABLE_UPDATED",module:"finance",record_id:rid,record_label:row.description,old_value:before,new_value:row});
