@@ -81,7 +81,8 @@ export function AppShell({
     nav.push(
       { to: "/nexus", label: t("nav.dashboard"), icon: LayoutDashboard },
       ...(ctx.company?.kind === "STUDIO_NEXUS"
-        ? [{ to: "/estudio", label: "Estúdio Nexus", icon: LayoutDashboard as typeof Users }]
+        ? [{ to: "/estudio", label: "Estúdio Nexus", icon: LayoutDashboard as typeof Users },
+          { to: "/estudio/conteudos", label: "Conteúdos", icon: CalendarDays }]
         : []),
       { to: "/nexus/empresas", label: t("nav.companies"), icon: Building2 },
       { to: "/nexus/usuarios", label: t("nav.users"), icon: Users },
