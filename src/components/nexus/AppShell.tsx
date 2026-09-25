@@ -296,7 +296,8 @@ export function AppShell({
           </DropdownMenu>
         </header>
 
-        <main className="nexus-main flex-1 p-4 md:p-8">\n          <div className="nexus-content">
+        <main className="nexus-main flex-1 p-4 md:p-8">
+          <div className="nexus-content">
           {isLoading ? (
             <div className="space-y-3">
               <Skeleton className="h-9 w-56" />
@@ -309,6 +310,7 @@ export function AppShell({
           ) : (
             children
           )}
+          </div>
         </main>
       </div>
     </div>
