@@ -76,7 +76,11 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
     if (!(roles ?? []).some((r) => r.role === "NEXUS_OWNER")) {
       throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
     }
-    const { data, error } = await context.supabase
+    // O Nexus Owner pode alternar entre todas as empresas cadastradas na plataforma.
+    // Usamos o cliente administrativo depois de validar o papel para não depender
+    // das políticas RLS de cada empresa para montar o seletor.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
       .from("companies")
       .select("id, name, status, kind")
       .order("name");
@@ -102,7 +106,8 @@ export const setActiveCompany = createServerFn({ method: "POST" })
     }
 
     if (data.companyId) {
-      const { data: company } = await context.supabase
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: company } = await supabaseAdmin
         .from("companies")
         .select("id, status")
         .eq("id", data.companyId)
