@@ -64,3 +64,65 @@ export const touchLogin = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
+
+
+export const listNexusCompanies = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: roles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    if (!(roles ?? []).some((r) => r.role === "NEXUS_OWNER")) {
+      throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
+    }
+    const { data, error } = await context.supabase
+      .from("companies")
+      .select("id, name, status, kind")
+      .order("name");
+    if (error) throw new AppError("COMPANIES_FAILED", "Não foi possível carregar as empresas.");
+    return data ?? [];
+  });
+
+export const setActiveCompany = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { companyId: string | null }) =>
+    z.object({ companyId: z.string().uuid().nullable() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: roles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    if (!(roles ?? []).some((r) => r.role === "NEXUS_OWNER")) {
+      throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
+    }
+
+    if (data.companyId) {
+      const { data: company } = await context.supabase
+        .from("companies")
+        .select("id, status")
+        .eq("id", data.companyId)
+        .maybeSingle();
+      if (!company || company.status !== "ACTIVE") {
+        throw new AppError("COMPANY_UNAVAILABLE", "A empresa selecionada não está ativa.");
+      }
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await (supabaseAdmin as any)
+      .from("profiles")
+      .update({ active_company_id: data.companyId })
+      .eq("id", context.userId);
+    if (error) throw new AppError("ACTIVE_COMPANY_FAILED", "Não foi possível alterar a empresa ativa.");
+
+    await writeAudit(supabaseAdmin, {
+      company_id: data.companyId,
+      user_id: context.userId,
+      action: "ACTIVE_COMPANY_CHANGED",
+      module: "platform",
+      record_id: data.companyId,
+    });
+
+    return { ok: true, companyId: data.companyId };
+  });
