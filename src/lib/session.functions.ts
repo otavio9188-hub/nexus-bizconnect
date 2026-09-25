@@ -85,9 +85,12 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
 
     // Use the authenticated Supabase client. This keeps the request inside the
     // user's session and avoids depending on a server-only service-role secret.
+    // Keep this selector compatible with databases where the optional
+    // Estúdio Nexus `kind` migration has not been applied yet.
+    // The base company fields exist since the initial ERP migration.
     const { data, error } = await context.supabase
       .from("companies")
-      .select("id, name, status, kind")
+      .select("id, name, status")
       .order("name", { ascending: true });
 
     if (error) {
@@ -107,7 +110,7 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
       id: company.id,
       name: company.name,
       status: company.status,
-      kind: company.kind ?? null,
+      kind: null,
     }));
   });
 
