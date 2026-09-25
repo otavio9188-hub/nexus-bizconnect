@@ -87,6 +87,7 @@ export function AppShell({
         ? [{ to: "/estudio", label: "Estúdio Nexus", icon: LayoutDashboard as typeof Users },
           { to: "/estudio/conteudos", label: "Conteúdos", icon: CalendarDays },
           { to: "/estudio/filiados", label: "Filiados", icon: Users },
+          { to: "/estudio/contratos", label: "Contratos", icon: ScrollText },
           { to: "/estudio/comissoes", label: "Comissões", icon: CircleDollarSign },
           { to: "/estudio/financeiro", label: "Financeiro", icon: CircleDollarSign },
           { to: "/estudio/fluxo-caixa", label: "Fluxo de Caixa", icon: WalletCards }]
