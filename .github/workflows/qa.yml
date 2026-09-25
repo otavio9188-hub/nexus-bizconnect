@@ -1,0 +1,26 @@
+name: Nexus QA
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Static QA agent
+        run: npm run qa
+      - name: Lint
+        run: npm run lint
+      - name: Production build
+        run: npm run build
