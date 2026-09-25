@@ -126,3 +126,65 @@ export const setActiveCompany = createServerFn({ method: "POST" })
 
     return { ok: true, companyId: data.companyId };
   });
+
+
+export const getStudioDashboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const ctx = await loadSessionContext(context.supabase, context.userId);
+    if (!ctx.activeCompanyId || ctx.company?.kind !== "STUDIO_NEXUS") {
+      throw new AppError("STUDIO_REQUIRED", "Selecione o Estúdio Nexus como empresa ativa.");
+    }
+
+    const companyId = ctx.activeCompanyId;
+    const start = new Date();
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+    const startDate = start.toISOString().slice(0, 10);
+
+    const [customers, contracts, contents, affiliates, cash, receivable, payable, investments] =
+      await Promise.all([
+        context.supabase.from("customers").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "ACTIVE"),
+        context.supabase.from("contracts").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "ACTIVE"),
+        context.supabase.from("content_items").select("id,status,platform", { count: "exact" }).eq("company_id", companyId),
+        context.supabase.from("affiliates").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "ACTIVE"),
+        context.supabase.from("cash_transactions").select("type,amount").eq("company_id", companyId).gte("transaction_date", startDate).eq("status", "PAID"),
+        context.supabase.from("accounts_receivable").select("amount,status").eq("company_id", companyId),
+        context.supabase.from("accounts_payable").select("amount,status").eq("company_id", companyId),
+        context.supabase.from("investments").select("invested_amount,current_value").eq("company_id", companyId).eq("status", "ACTIVE"),
+      ]);
+
+    const income = (cash.data ?? []).filter((x) => x.type === "INCOME").reduce((s, x) => s + Number(x.amount || 0), 0);
+    const expenses = (cash.data ?? []).filter((x) => x.type === "EXPENSE").reduce((s, x) => s + Number(x.amount || 0), 0);
+    const pendingReceivable = (receivable.data ?? []).filter((x) => x.status === "PENDING" || x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0);
+    const overdueReceivable = (receivable.data ?? []).filter((x) => x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0);
+    const pendingPayable = (payable.data ?? []).filter((x) => x.status === "PENDING" || x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0);
+    const investmentValue = (investments.data ?? []).reduce((s, x) => s + Number(x.current_value || 0), 0);
+
+    const contentRows = contents.data ?? [];
+    const contentByStatus = contentRows.reduce<Record<string, number>>((acc, row) => {
+      acc[row.status] = (acc[row.status] ?? 0) + 1;
+      return acc;
+    }, {});
+    const contentByPlatform = contentRows.reduce<Record<string, number>>((acc, row) => {
+      acc[row.platform] = (acc[row.platform] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    return {
+      company: ctx.company,
+      customers: customers.count ?? 0,
+      contracts: contracts.count ?? 0,
+      affiliates: affiliates.count ?? 0,
+      contents: contentRows.length,
+      contentByStatus,
+      contentByPlatform,
+      income,
+      expenses,
+      profit: income - expenses,
+      pendingReceivable,
+      overdueReceivable,
+      pendingPayable,
+      investmentValue,
+    };
+  });
