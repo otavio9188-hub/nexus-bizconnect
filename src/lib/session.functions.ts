@@ -76,11 +76,10 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
     if (!(roles ?? []).some((r) => r.role === "NEXUS_OWNER")) {
       throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
     }
-    // O Nexus Owner pode alternar entre todas as empresas cadastradas na plataforma.
-    // Usamos o cliente administrativo depois de validar o papel para não depender
-    // das políticas RLS de cada empresa para montar o seletor.
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
+    // A política RLS de companies já permite SELECT ao NEXUS_OWNER.
+    // Usamos o cliente autenticado para manter o mesmo contexto da sessão
+    // e não depender de SUPABASE_SERVICE_ROLE_KEY no ambiente da aplicação.
+    const { data, error } = await context.supabase
       .from("companies")
       .select("id, name, status, kind")
       .order("name");
