@@ -31,7 +31,8 @@ export const listReceivables=createServerFn({method:"GET"}).middleware([requireS
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const {data,error}=await supabaseAdmin.from("accounts_receivable").select("*, customers(name)").eq("company_id",ctx.activeCompanyId!).order("due_date",{ascending:true});
   if(error)throw new AppError("LIST_FAILED","Não foi possível carregar contas a receber.");
-  return data??[];
+  const today=new Date().toISOString().slice(0,10);
+  return (data??[]).map((row:any)=>row.status==="PENDING"&&row.due_date<today?{...row,status:"OVERDUE"}:row);
 });
 
 export const listCashTransactions=createServerFn({method:"GET"}).middleware([requireSupabaseAuth]).handler(async({context})=>{
