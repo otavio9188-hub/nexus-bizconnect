@@ -97,21 +97,21 @@ function StudioDashboard() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Metric label="Clientes ativos" value={query.data.customers} icon={Users} />
-            <Metric label="Contratos ativos" value={query.data.contracts} icon={Handshake} />
-            <Metric label="Filiados ativos" value={query.data.affiliates} icon={BriefcaseBusiness} />
-            <Metric label="Conteúdos" value={query.data.contents} icon={FileText} />
-            <Metric label="Receita no mês" value={money(query.data.income)} icon={ArrowUpRight} />
-            <Metric label="Despesas no mês" value={money(query.data.expenses)} icon={ArrowDownRight} />
+            <Metric label="Clientes ativos" value={data.customers} icon={Users} />
+            <Metric label="Contratos ativos" value={data.contracts} icon={Handshake} />
+            <Metric label="Filiados ativos" value={data.affiliates} icon={BriefcaseBusiness} />
+            <Metric label="Conteúdos" value={data.contents} icon={FileText} />
+            <Metric label="Receita no mês" value={money(data.income)} icon={ArrowUpRight} />
+            <Metric label="Despesas no mês" value={money(data.expenses)} icon={ArrowDownRight} />
             <Metric
               label="Lucro no mês"
-              value={money(query.data.profit)}
+              value={money(data.profit)}
               icon={TrendingUp}
               detail="Receitas pagas menos despesas pagas"
             />
             <Metric
               label="Investimentos"
-              value={money(query.data.investmentValue)}
+              value={money(data.investmentValue)}
               icon={CircleDollarSign}
             />
           </div>
@@ -122,11 +122,11 @@ function StudioDashboard() {
                 <CardTitle className="text-base">Conteúdos por plataforma</CardTitle>
               </CardHeader>
               <CardContent>
-                {Object.keys(query.data.contentByPlatform).length === 0 ? (
+                {Object.keys(data.contentByPlatform).length === 0 ? (
                   <p className="text-sm text-muted-foreground">Nenhum conteúdo cadastrado.</p>
                 ) : (
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {Object.entries(query.data.contentByPlatform).map(([platform, count]) => (
+                    {Object.entries(data.contentByPlatform).map(([platform, count]) => (
                       <div key={platform} className="rounded-lg border bg-secondary/30 p-4">
                         <div className="text-xs uppercase tracking-wide text-muted-foreground">
                           {platform}
@@ -146,20 +146,20 @@ function StudioDashboard() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">A receber</span>
-                  <strong>{money(query.data.pendingReceivable)}</strong>
+                  <strong>{money(data.pendingReceivable)}</strong>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Em atraso</span>
-                  <strong className="text-destructive">{money(query.data.overdueReceivable)}</strong>
+                  <strong className="text-destructive">{money(data.overdueReceivable)}</strong>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">A pagar</span>
-                  <strong>{money(query.data.pendingPayable)}</strong>
+                  <strong>{money(data.pendingPayable)}</strong>
                 </div>
                 <div className="flex items-center gap-2 border-t pt-4 text-sm">
                   <WalletCards className="size-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Resultado mensal</span>
-                  <strong className="ml-auto">{money(query.data.profit)}</strong>
+                  <strong className="ml-auto">{money(data.profit)}</strong>
                 </div>
               </CardContent>
             </Card>
@@ -171,7 +171,7 @@ function StudioDashboard() {
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-3">
-                {Object.entries(query.data.contentByStatus).map(([status, count]) => (
+                {Object.entries(data.contentByStatus).map(([status, count]) => (
                   <div key={status} className="rounded-lg border px-4 py-3">
                     <div className="text-xs uppercase tracking-wide text-muted-foreground">
                       {status}
