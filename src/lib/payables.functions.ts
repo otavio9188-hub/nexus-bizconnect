@@ -53,7 +53,7 @@ export const updatePayable=createServerFn({method:"POST"}).middleware([requireSu
   if(!before)throw new AppError("NOT_FOUND","Conta a pagar não encontrada.");
   const {id:pid,...fields}=data;
   const payload={...fields, supplier_id:fields.supplier_id||null, payment_date:fields.status==="PAID"?(fields.payment_date||before.payment_date||new Date().toISOString().slice(0,10)):null};
-  const {data:row,error}=await supabaseAdmin.from("accounts_payable").update(payload).eq("id",pid).eq("company_id",ctx.activeCompanyId!).select("*").single();
+  const {data:row,error}=await supabaseAdmin.from("accounts_payable").update(payload as any).eq("id",pid).eq("company_id",ctx.activeCompanyId!).select("*").single();
   if(error||!row)throw new AppError("UPDATE_FAILED","Não foi possível atualizar a conta.");
   await syncCash(supabaseAdmin,row,context.userId,ctx.activeCompanyId!);
   await writeAudit(supabaseAdmin,{company_id:ctx.activeCompanyId,user_id:context.userId,user_email:ctx.profile.email,action:"PAYABLE_UPDATED",module:"finance",record_id:pid,record_label:row.description,old_value:before,new_value:row});
