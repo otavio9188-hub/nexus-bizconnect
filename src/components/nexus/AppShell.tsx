@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   Building2,
   CalendarDays,
+  CircleDollarSign,
   ChevronDown,
   LayoutDashboard,
   LifeBuoy,
@@ -84,7 +85,8 @@ export function AppShell({
       ...(ctx.company?.kind === "STUDIO_NEXUS"
         ? [{ to: "/estudio", label: "Estúdio Nexus", icon: LayoutDashboard as typeof Users },
           { to: "/estudio/conteudos", label: "Conteúdos", icon: CalendarDays },
-          { to: "/estudio/filiados", label: "Filiados", icon: Users }]
+          { to: "/estudio/filiados", label: "Filiados", icon: Users },
+          { to: "/estudio/comissoes", label: "Comissões", icon: CircleDollarSign }]
         : []),
       { to: "/nexus/empresas", label: t("nav.companies"), icon: Building2 },
       { to: "/nexus/usuarios", label: t("nav.users"), icon: Users },
