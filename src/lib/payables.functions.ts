@@ -46,7 +46,7 @@ export const createPayable=createServerFn({method:"POST"}).middleware([requireSu
   return row;
 });
 
-export const updatePayable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>id.merge(schema)).handler(async({data,context})=>{
+export const updatePayable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>id.merge(schema).parse(v)).handler(async({data,context})=>{
   const ctx=await ctxFor(context.supabase,context.userId,"EDIT");
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const {data:before}=await supabaseAdmin.from("accounts_payable").select("*").eq("id",data.id).eq("company_id",ctx.activeCompanyId!).maybeSingle();
