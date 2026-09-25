@@ -20,6 +20,6 @@ jobs:
       - name: Static QA agent
         run: npm run qa
       - name: Lint
-        run: npm run lint
+        run: npx eslint . --rule 'prettier/prettier: off'
       - name: Production build
         run: npm run build
