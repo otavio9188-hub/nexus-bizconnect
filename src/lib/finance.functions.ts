@@ -40,7 +40,41 @@ export const listCashTransactions=createServerFn({method:"GET"}).middleware([req
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const {data,error}=await supabaseAdmin.from("cash_transactions").select("*").eq("company_id",ctx.activeCompanyId!).order("transaction_date",{ascending:false}).order("created_at",{ascending:false});
   if(error)throw new AppError("LIST_FAILED","Não foi possível carregar o fluxo de caixa.");
-  return data??[];
+
+  // Reconcilia comissões já marcadas como pagas que foram registradas antes
+  // da integração com o fluxo de caixa.
+  const {data:paidCommissions}=await supabaseAdmin
+    .from("commission_payments")
+    .select("id, amount, paid_at, notes")
+    .eq("company_id",ctx.activeCompanyId!)
+    .eq("status","PAID");
+
+  for(const commission of paidCommissions??[]){
+    const exists=(data??[]).some((tx:any)=>tx.reference_type==="commission_payments"&&tx.reference_id===commission.id);
+    if(!exists){
+      await supabaseAdmin.from("cash_transactions").insert({
+        company_id:ctx.activeCompanyId!,
+        type:"EXPENSE",
+        category:"Comissões",
+        description:"Comissão"+(commission.notes?" - "+commission.notes:""),
+        amount:Number(commission.amount),
+        transaction_date:commission.paid_at||new Date().toISOString().slice(0,10),
+        status:"PAID",
+        reference_type:"commission_payments",
+        reference_id:commission.id,
+        user_id:context.userId
+      } as any);
+    }
+  }
+
+  const {data:reconciled,error:reconciledError}=await supabaseAdmin
+    .from("cash_transactions")
+    .select("*")
+    .eq("company_id",ctx.activeCompanyId!)
+    .order("transaction_date",{ascending:false})
+    .order("created_at",{ascending:false});
+  if(reconciledError)throw new AppError("LIST_FAILED","Não foi possível carregar o fluxo de caixa.");
+  return reconciled??[];
 });
 
 export const listFinanceCustomers=createServerFn({method:"GET"}).middleware([requireSupabaseAuth]).handler(async({context})=>{
