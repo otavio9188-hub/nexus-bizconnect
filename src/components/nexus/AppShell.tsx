@@ -200,6 +200,12 @@ export function AppShell({
                     onClick={async () => {
                       await setCompanyFn({ data: { companyId: company.id } });
                       await queryClient.invalidateQueries({ queryKey: ["session-context"] });
+
+                      // Ao selecionar o Estúdio Nexus, entrar automaticamente no painel
+                      // especial do Estúdio. Empresas clientes continuam no contexto do Nexus.
+                      if (company.kind === "STUDIO_NEXUS") {
+                        navigate({ to: "/estudio" });
+                      }
                     }}
                   >
                     <div className="min-w-0">
