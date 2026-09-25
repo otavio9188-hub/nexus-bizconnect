@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -18,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSessionContext } from "@/hooks/useSessionContext";
 import { useI18n, LOCALES, type Locale } from "@/lib/i18n";
 import { can } from "@/lib/nexus-shared";
+import { listNexusCompanies, setActiveCompany } from "@/lib/session.functions";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,6 +48,13 @@ export function AppShell({
   const queryClient = useQueryClient();
   const { data: ctx, isLoading, error } = useSessionContext();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const companiesFn = useServerFn(listNexusCompanies);
+  const setCompanyFn = useServerFn(setActiveCompany);
+  const companiesQuery = useQuery({
+    queryKey: ["nexus-companies-selector"],
+    queryFn: () => companiesFn(),
+    enabled: Boolean(ctx?.isNexusOwner),
+  });
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
@@ -164,6 +173,37 @@ export function AppShell({
               <p className="truncate text-xs text-muted-foreground">{description}</p>
             )}
           </div>
+
+          {ctx?.isNexusOwner && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="max-w-48 gap-1 text-xs">
+                  <Building2 className="size-3.5" />
+                  <span className="truncate">{ctx.company?.name ?? "Selecionar empresa"}</span>
+                  <ChevronDown className="size-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuLabel>Empresa ativa</DropdownMenuLabel>
+                {companiesQuery.data?.map((company) => (
+                  <DropdownMenuItem
+                    key={company.id}
+                    onClick={async () => {
+                      await setCompanyFn({ data: { companyId: company.id } });
+                      await queryClient.invalidateQueries({ queryKey: ["session-context"] });
+                    }}
+                  >
+                    <div className="min-w-0">
+                      <div className="truncate">{company.name}</div>
+                      <div className="text-[10px] uppercase text-muted-foreground">
+                        {company.kind === "STUDIO_NEXUS" ? "Estúdio Nexus" : "Cliente"}
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
