@@ -16,6 +16,7 @@ export type SessionCompany = {
   id: string;
   name: string;
   status: CompanyStatus;
+  kind?: "STUDIO_NEXUS" | "CLIENT";
 } | null;
 
 export type SessionContext = {
@@ -30,7 +31,9 @@ export type SessionContext = {
 
 export function can(ctx: SessionContext | undefined, module: string, action: string): boolean {
   if (!ctx) return false;
-  if (ctx.isNexusOwner) return false;
+  if (ctx.isNexusOwner) {
+    return Boolean(ctx.activeCompanyId && ctx.company?.status === "ACTIVE");
+  }
   if (ctx.profile.status !== "ACTIVE") return false;
   if (ctx.company?.status !== "ACTIVE") return false;
   if (ctx.isCompanyAdmin) return true;
