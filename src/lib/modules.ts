@@ -23,6 +23,13 @@ export const MODULES = [
   "employees",
   "company_settings",
   "audit_logs",
+  // Estúdio Nexus modules
+  "affiliates",
+  "contracts",
+  "content",
+  "commissions",
+  "investments",
+  "fiscal",
 ] as const;
 export type ModuleKey = (typeof MODULES)[number];
 
