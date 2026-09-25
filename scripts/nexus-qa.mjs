@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const root=process.cwd();
+const root=process.cwd(); // Nexus QA
 const checks=[
   ["Auth context","src/lib/actor.ts",["loadSessionContext","NEXUS_OWNER","activeCompanyId"]],
   ["Customers","src/lib/customers.functions.ts",["listCustomers","createCustomer","updateCustomer","deleteCustomer"]],
