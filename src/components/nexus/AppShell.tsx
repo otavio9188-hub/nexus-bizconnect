@@ -188,12 +188,36 @@ export function AppShell({
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="max-w-48 gap-1 text-xs">
                   <Building2 className="size-3.5" />
-                  <span className="truncate">{ctx.company?.name ?? "Selecionar empresa"}</span>
+                  <span className="truncate">{ctx.company?.name ?? "Nexus — Administração"}</span>
                   <ChevronDown className="size-3" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuLabel>Empresa ativa</DropdownMenuLabel>
+              <DropdownMenuContent align="end" className="w-72">
+                <DropdownMenuLabel>Alternar ambiente</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={async () => {
+                    await setCompanyFn({ data: { companyId: null } });
+                    await queryClient.invalidateQueries({ queryKey: ["session-context"] });
+                    navigate({ to: "/nexus" });
+                  }}
+                >
+                  <div className="min-w-0">
+                    <div className="truncate">Nexus — Administração</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">
+                      Controle da plataforma
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {companiesQuery.isLoading && (
+                  <DropdownMenuItem disabled>Carregando empresas...</DropdownMenuItem>
+                )}
+                {companiesQuery.isError && (
+                  <DropdownMenuItem disabled>Não foi possível carregar as empresas</DropdownMenuItem>
+                )}
+                {!companiesQuery.isLoading && !companiesQuery.isError && companiesQuery.data?.length === 0 && (
+                  <DropdownMenuItem disabled>Nenhuma empresa cadastrada</DropdownMenuItem>
+                )}
                 {companiesQuery.data?.map((company) => (
                   <DropdownMenuItem
                     key={company.id}
@@ -201,10 +225,11 @@ export function AppShell({
                       await setCompanyFn({ data: { companyId: company.id } });
                       await queryClient.invalidateQueries({ queryKey: ["session-context"] });
 
-                      // Ao selecionar o Estúdio Nexus, entrar automaticamente no painel
-                      // especial do Estúdio. Empresas clientes continuam no contexto do Nexus.
+                      // O Estúdio possui uma interface própria.
                       if (company.kind === "STUDIO_NEXUS") {
                         navigate({ to: "/estudio" });
+                      } else {
+                        navigate({ to: "/nexus" });
                       }
                     }}
                   >
