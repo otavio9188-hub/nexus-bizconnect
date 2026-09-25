@@ -69,7 +69,7 @@ export const createReceivable=createServerFn({method:"POST"}).middleware([requir
   return row;
 });
 
-export const updateReceivable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>id.merge(schema)).handler(async({data,context})=>{
+export const updateReceivable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>id.merge(schema).parse(v)).handler(async({data,context})=>{
   const ctx=await ctxFor(context.supabase,context.userId,"EDIT");
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const {data:before}=await supabaseAdmin.from("accounts_receivable").select("*").eq("id",data.id).eq("company_id",ctx.activeCompanyId!).maybeSingle();
