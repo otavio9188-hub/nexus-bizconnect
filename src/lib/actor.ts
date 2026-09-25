@@ -31,12 +31,22 @@ export async function loadSessionContext(supabase: Db, userId: string): Promise<
 
   if (!profile) throw new AppError("NO_PROFILE", "Perfil de usuário não encontrado.");
 
+  let activeCompanyId: string | null = profile.company_id;
+  if (roleList.includes("NEXUS_OWNER")) {
+    const { data: ownerProfile } = await (supabase as any)
+      .from("profiles")
+      .select("active_company_id")
+      .eq("id", userId)
+      .maybeSingle();
+    activeCompanyId = ownerProfile?.active_company_id ?? null;
+  }
+
   let company: SessionContext["company"] = null;
-  if (profile.company_id) {
+  if (activeCompanyId) {
     const { data } = await supabase
       .from("companies")
       .select("id, name, status")
-      .eq("id", profile.company_id)
+      .eq("id", activeCompanyId)
       .maybeSingle();
     company = data ?? null;
   }
