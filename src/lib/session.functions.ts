@@ -76,11 +76,15 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
     if (!(roles ?? []).some((r) => r.role === "NEXUS_OWNER")) {
       throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
     }
-    const { data, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
       .from("companies")
       .select("id, name, status, kind")
       .order("name");
-    if (error) throw new AppError("COMPANIES_FAILED", "Não foi possível carregar as empresas.");
+    if (error) {
+      console.error("[Nexus] listNexusCompanies failed:", error);
+      throw new AppError("COMPANIES_FAILED", "Não foi possível carregar as empresas.");
+    }
     return data ?? [];
   });
 
