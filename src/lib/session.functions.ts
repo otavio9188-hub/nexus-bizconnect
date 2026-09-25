@@ -80,15 +80,42 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
     // para listar as empresas. Isso evita depender de políticas RLS da tabela
     // companies que podem variar entre ambientes/migrations.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
-      .from("companies")
-      .select("id, name, status, kind")
-      .order("name");
-    if (error) {
-      console.error("[Nexus] listNexusCompanies failed:", error);
-      throw new AppError("COMPANIES_FAILED", "Não foi possível carregar as empresas.");
+    try {
+      // Use a wildcard select here because this endpoint is a Nexus-owner
+      // control-plane query. This keeps the selector resilient if the local
+      // generated Supabase types are ahead of the deployed schema.
+      const { data, error } = await supabaseAdmin
+        .from("companies")
+        .select("*")
+        .order("name", { ascending: true });
+
+      if (error) {
+        console.error("[Nexus] listNexusCompanies failed:", {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+        });
+        throw new AppError(
+          "COMPANIES_FAILED",
+          "Não foi possível carregar as empresas. Verifique a conexão com o banco de dados.",
+        );
+      }
+
+      return (data ?? []).map((company) => ({
+        id: company.id,
+        name: company.name,
+        status: company.status,
+        kind: company.kind ?? null,
+      }));
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      console.error("[Nexus] listNexusCompanies unexpected error:", error);
+      throw new AppError(
+        "COMPANIES_FAILED",
+        "Não foi possível carregar as empresas. Verifique a conexão com o banco de dados.",
+      );
     }
-    return data ?? [];
   });
 
 export const setActiveCompany = createServerFn({ method: "POST" })
