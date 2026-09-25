@@ -20,7 +20,7 @@ async function syncCash(supabaseAdmin:any,row:any,userId:string,companyId:string
   if(row.status==="PAID"){
     const payload={company_id:companyId,type:"EXPENSE",category:"Pagamentos",description:row.description,amount:Number(row.amount),transaction_date:row.payment_date||new Date().toISOString().slice(0,10),status:"PAID",reference_type:referenceType,reference_id:row.id,user_id:userId};
     if(existing?.id) await supabaseAdmin.from("cash_transactions").update(payload).eq("id",existing.id).eq("company_id",companyId);
-    else await supabaseAdmin.from("cash_transactions").insert(payload);
+    else await supabaseAdmin.from("cash_transactions").insert(payload as any);
   }else if(existing?.id){
     await supabaseAdmin.from("cash_transactions").delete().eq("id",existing.id).eq("company_id",companyId);
   }
@@ -39,7 +39,7 @@ export const createPayable=createServerFn({method:"POST"}).middleware([requireSu
   const ctx=await ctxFor(context.supabase,context.userId,"CREATE");
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const payload={...data,company_id:ctx.activeCompanyId!,supplier_id:data.supplier_id||null,payment_date:data.status==="PAID"?(data.payment_date||new Date().toISOString().slice(0,10)):null};
-  const {data:row,error}=await supabaseAdmin.from("accounts_payable").insert(payload).select("*").single();
+  const {data:row,error}=await supabaseAdmin.from("accounts_payable").insert(payload as any).select("*").single();
   if(error||!row)throw new AppError("CREATE_FAILED","Não foi possível criar a conta a pagar.");
   await syncCash(supabaseAdmin,row,context.userId,ctx.activeCompanyId!);
   await writeAudit(supabaseAdmin,{company_id:ctx.activeCompanyId,user_id:context.userId,user_email:ctx.profile.email,action:"PAYABLE_CREATED",module:"finance",record_id:row.id,record_label:row.description,new_value:row});
