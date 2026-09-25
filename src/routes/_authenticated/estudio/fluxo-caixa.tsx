@@ -1,0 +1,11 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { ArrowDownCircle, ArrowUpCircle, WalletCards } from "lucide-react";
+import { AppShell } from "@/components/nexus/AppShell";
+import { listReceivables } from "@/lib/finance.functions";
+import { listPayables } from "@/lib/payables.functions";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+export const Route=createFileRoute("/_authenticated/estudio/fluxo-caixa")({component:CashFlowPage});
+const money=(v:number)=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+function CashFlowPage(){const rf=useServerFn(listReceivables);const pf=useServerFn(listPayables);const r=useQuery({queryKey:["studio-ar-flow"],queryFn:()=>rf()});const p=useQuery({queryKey:["studio-ap-flow"],queryFn:()=>pf()});const rec=r.data??[];const pay=p.data??[];const received=rec.filter(x=>x.status==="PAID").reduce((a,x)=>a+Number(x.amount||0),0);const expenses=pay.filter(x=>x.status==="PAID").reduce((a,x)=>a+Number(x.amount||0),0);const open=rec.filter(x=>x.status==="PENDING"||x.status==="OVERDUE").reduce((a,x)=>a+Number(x.amount||0),0);const debt=pay.filter(x=>x.status==="PENDING"||x.status==="OVERDUE").reduce((a,x)=>a+Number(x.amount||0),0);return <AppShell title="Fluxo de Caixa" description="Visão consolidada de entradas e saídas"><div className="space-y-6"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["Recebido",received,ArrowUpCircle],["Despesas pagas",expenses,ArrowDownCircle],["A receber",open,WalletCards],["A pagar",debt,WalletCards]].map(([l,v,I])=><Card key={String(l)}><CardContent className="p-5"><I className="size-4 text-muted-foreground"/><div className="mt-3 text-xl font-semibold">{money(Number(v))}</div><div className="text-xs text-muted-foreground">{String(l)}</div></CardContent></Card>)}</div><Card><CardHeader><CardTitle className="text-base">Saldo realizado</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{money(received-expenses)}</div><p className="mt-1 text-sm text-muted-foreground">Recebimentos pagos menos despesas pagas.</p></CardContent></Card></div></AppShell>}
