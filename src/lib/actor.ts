@@ -47,7 +47,7 @@ export async function loadSessionContext(supabase: Db, userId: string): Promise<
   if (activeCompanyId) {
     const { data } = await supabase
       .from("companies")
-      .select("id, name, status")
+       .select("id, name, status, kind")
       .eq("id", activeCompanyId)
       .maybeSingle();
     company = data ?? null;
