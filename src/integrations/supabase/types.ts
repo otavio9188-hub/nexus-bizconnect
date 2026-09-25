@@ -89,6 +89,7 @@ export type Database = {
           [key: string]: any
           contract_id: string | null
           amount: number
+          contract_id: string | null
           company_id: string
           created_at: string
           customer_id: string | null
@@ -103,6 +104,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          contract_id?: string | null
           company_id: string
           created_at?: string
           customer_id?: string | null
@@ -117,6 +119,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          contract_id?: string | null
           company_id?: string
           created_at?: string
           customer_id?: string | null
@@ -130,6 +133,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "accounts_receivable_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "accounts_receivable_company_id_fkey"
             columns: ["company_id"]
