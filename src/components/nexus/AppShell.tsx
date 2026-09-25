@@ -6,6 +6,7 @@ import {
   Building2,
   CalendarDays,
   CircleDollarSign,
+  WalletCards,
   ChevronDown,
   LayoutDashboard,
   LifeBuoy,
@@ -87,7 +88,8 @@ export function AppShell({
           { to: "/estudio/conteudos", label: "Conteúdos", icon: CalendarDays },
           { to: "/estudio/filiados", label: "Filiados", icon: Users },
           { to: "/estudio/comissoes", label: "Comissões", icon: CircleDollarSign },
-          { to: "/estudio/financeiro", label: "Financeiro", icon: CircleDollarSign }]
+          { to: "/estudio/financeiro", label: "Financeiro", icon: CircleDollarSign },
+          { to: "/estudio/fluxo-caixa", label: "Fluxo de Caixa", icon: WalletCards }]
         : []),
       { to: "/nexus/empresas", label: t("nav.companies"), icon: Building2 },
       { to: "/nexus/usuarios", label: t("nav.users"), icon: Users },
