@@ -29,6 +29,4 @@ function CashFlowPage(){
    <Card><CardHeader><CardTitle className="text-base">Movimentações {period&&<span className="text-sm font-normal text-muted-foreground">({period})</span>}</CardTitle></CardHeader><CardContent>{q.isLoading?<p className="py-8 text-sm text-muted-foreground">Carregando...</p>:rows.length===0?<div className="py-10 text-center text-sm text-muted-foreground">Nenhuma movimentação no período.</div>:<div className="space-y-2">{rows.map((x:any)=><div key={x.id} className="flex flex-col gap-2 rounded-lg border p-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><div className="font-medium">{x.description}</div><div className="text-xs text-muted-foreground">{x.category||"Sem categoria"} · {new Date(x.transaction_date+"T00:00:00").toLocaleDateString("pt-BR")}</div></div><div className={x.type==="INCOME"?"font-semibold":"font-semibold"}>{x.type==="INCOME"?"+":"-"} {money(Number(x.amount))}</div></div>)}</div>}</CardContent></Card>
   </div>
  </AppShell>
-}
-
-import * as React from "react";
+ }

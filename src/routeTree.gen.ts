@@ -20,6 +20,13 @@ import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedFuncionariosRouteImport } from './routes/_authenticated/funcionarios'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedTrocarSenhaRouteImport } from './routes/_authenticated/trocar-senha'
+import { Route as AuthenticatedEstudioIndexRouteImport } from './routes/_authenticated/estudio/index'
+import { Route as AuthenticatedEstudioComissoesRouteImport } from './routes/_authenticated/estudio/comissoes'
+import { Route as AuthenticatedEstudioConteudosRouteImport } from './routes/_authenticated/estudio/conteudos'
+import { Route as AuthenticatedEstudioContratosRouteImport } from './routes/_authenticated/estudio/contratos'
+import { Route as AuthenticatedEstudioFiliadosRouteImport } from './routes/_authenticated/estudio/filiados'
+import { Route as AuthenticatedEstudioFinanceiroRouteImport } from './routes/_authenticated/estudio/financeiro'
+import { Route as AuthenticatedEstudioFluxoCaixaRouteImport } from './routes/_authenticated/estudio/fluxo-caixa'
 import { Route as AuthenticatedNexusIndexRouteImport } from './routes/_authenticated/nexus/index'
 import { Route as AuthenticatedNexusAuditoriaRouteImport } from './routes/_authenticated/nexus/auditoria'
 import { Route as AuthenticatedNexusConfiguracoesRouteImport } from './routes/_authenticated/nexus/configuracoes'
@@ -83,6 +90,48 @@ const AuthenticatedTrocarSenhaRoute =
     path: '/trocar-senha',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedEstudioIndexRoute =
+  AuthenticatedEstudioIndexRouteImport.update({
+    id: '/estudio/',
+    path: '/estudio/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioComissoesRoute =
+  AuthenticatedEstudioComissoesRouteImport.update({
+    id: '/estudio/comissoes',
+    path: '/estudio/comissoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioConteudosRoute =
+  AuthenticatedEstudioConteudosRouteImport.update({
+    id: '/estudio/conteudos',
+    path: '/estudio/conteudos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioContratosRoute =
+  AuthenticatedEstudioContratosRouteImport.update({
+    id: '/estudio/contratos',
+    path: '/estudio/contratos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioFiliadosRoute =
+  AuthenticatedEstudioFiliadosRouteImport.update({
+    id: '/estudio/filiados',
+    path: '/estudio/filiados',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioFinanceiroRoute =
+  AuthenticatedEstudioFinanceiroRouteImport.update({
+    id: '/estudio/financeiro',
+    path: '/estudio/financeiro',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioFluxoCaixaRoute =
+  AuthenticatedEstudioFluxoCaixaRouteImport.update({
+    id: '/estudio/fluxo-caixa',
+    path: '/estudio/fluxo-caixa',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedNexusIndexRoute = AuthenticatedNexusIndexRouteImport.update({
   id: '/nexus/',
   path: '/nexus/',
@@ -124,10 +173,17 @@ export interface FileRoutesByFullPath {
   '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
+  '/estudio/comissoes': typeof AuthenticatedEstudioComissoesRoute
+  '/estudio/conteudos': typeof AuthenticatedEstudioConteudosRoute
+  '/estudio/contratos': typeof AuthenticatedEstudioContratosRoute
+  '/estudio/filiados': typeof AuthenticatedEstudioFiliadosRoute
+  '/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
+  '/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
   '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
   '/nexus/usuarios': typeof AuthenticatedNexusUsuariosRoute
+  '/estudio/': typeof AuthenticatedEstudioIndexRoute
   '/nexus/': typeof AuthenticatedNexusIndexRoute
 }
 export interface FileRoutesByTo {
@@ -141,10 +197,17 @@ export interface FileRoutesByTo {
   '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
+  '/estudio/comissoes': typeof AuthenticatedEstudioComissoesRoute
+  '/estudio/conteudos': typeof AuthenticatedEstudioConteudosRoute
+  '/estudio/contratos': typeof AuthenticatedEstudioContratosRoute
+  '/estudio/filiados': typeof AuthenticatedEstudioFiliadosRoute
+  '/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
+  '/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
   '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
   '/nexus/usuarios': typeof AuthenticatedNexusUsuariosRoute
+  '/estudio': typeof AuthenticatedEstudioIndexRoute
   '/nexus': typeof AuthenticatedNexusIndexRoute
 }
 export interface FileRoutesById {
@@ -160,10 +223,17 @@ export interface FileRoutesById {
   '/_authenticated/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
+  '/_authenticated/estudio/comissoes': typeof AuthenticatedEstudioComissoesRoute
+  '/_authenticated/estudio/conteudos': typeof AuthenticatedEstudioConteudosRoute
+  '/_authenticated/estudio/contratos': typeof AuthenticatedEstudioContratosRoute
+  '/_authenticated/estudio/filiados': typeof AuthenticatedEstudioFiliadosRoute
+  '/_authenticated/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
+  '/_authenticated/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
   '/_authenticated/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/_authenticated/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/_authenticated/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
   '/_authenticated/nexus/usuarios': typeof AuthenticatedNexusUsuariosRoute
+  '/_authenticated/estudio/': typeof AuthenticatedEstudioIndexRoute
   '/_authenticated/nexus/': typeof AuthenticatedNexusIndexRoute
 }
 export interface FileRouteTypes {
@@ -179,10 +249,17 @@ export interface FileRouteTypes {
     | '/funcionarios'
     | '/painel'
     | '/trocar-senha'
+    | '/estudio/comissoes'
+    | '/estudio/conteudos'
+    | '/estudio/contratos'
+    | '/estudio/filiados'
+    | '/estudio/financeiro'
+    | '/estudio/fluxo-caixa'
     | '/nexus/auditoria'
     | '/nexus/configuracoes'
     | '/nexus/empresas'
     | '/nexus/usuarios'
+    | '/estudio/'
     | '/nexus/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -196,10 +273,17 @@ export interface FileRouteTypes {
     | '/funcionarios'
     | '/painel'
     | '/trocar-senha'
+    | '/estudio/comissoes'
+    | '/estudio/conteudos'
+    | '/estudio/contratos'
+    | '/estudio/filiados'
+    | '/estudio/financeiro'
+    | '/estudio/fluxo-caixa'
     | '/nexus/auditoria'
     | '/nexus/configuracoes'
     | '/nexus/empresas'
     | '/nexus/usuarios'
+    | '/estudio'
     | '/nexus'
   id:
     | '__root__'
@@ -214,10 +298,17 @@ export interface FileRouteTypes {
     | '/_authenticated/funcionarios'
     | '/_authenticated/painel'
     | '/_authenticated/trocar-senha'
+    | '/_authenticated/estudio/comissoes'
+    | '/_authenticated/estudio/conteudos'
+    | '/_authenticated/estudio/contratos'
+    | '/_authenticated/estudio/filiados'
+    | '/_authenticated/estudio/financeiro'
+    | '/_authenticated/estudio/fluxo-caixa'
     | '/_authenticated/nexus/auditoria'
     | '/_authenticated/nexus/configuracoes'
     | '/_authenticated/nexus/empresas'
     | '/_authenticated/nexus/usuarios'
+    | '/_authenticated/estudio/'
     | '/_authenticated/nexus/'
   fileRoutesById: FileRoutesById
 }
@@ -307,6 +398,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTrocarSenhaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/estudio/': {
+      id: '/_authenticated/estudio/'
+      path: '/estudio'
+      fullPath: '/estudio/'
+      preLoaderRoute: typeof AuthenticatedEstudioIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/comissoes': {
+      id: '/_authenticated/estudio/comissoes'
+      path: '/estudio/comissoes'
+      fullPath: '/estudio/comissoes'
+      preLoaderRoute: typeof AuthenticatedEstudioComissoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/conteudos': {
+      id: '/_authenticated/estudio/conteudos'
+      path: '/estudio/conteudos'
+      fullPath: '/estudio/conteudos'
+      preLoaderRoute: typeof AuthenticatedEstudioConteudosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/contratos': {
+      id: '/_authenticated/estudio/contratos'
+      path: '/estudio/contratos'
+      fullPath: '/estudio/contratos'
+      preLoaderRoute: typeof AuthenticatedEstudioContratosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/filiados': {
+      id: '/_authenticated/estudio/filiados'
+      path: '/estudio/filiados'
+      fullPath: '/estudio/filiados'
+      preLoaderRoute: typeof AuthenticatedEstudioFiliadosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/financeiro': {
+      id: '/_authenticated/estudio/financeiro'
+      path: '/estudio/financeiro'
+      fullPath: '/estudio/financeiro'
+      preLoaderRoute: typeof AuthenticatedEstudioFinanceiroRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/fluxo-caixa': {
+      id: '/_authenticated/estudio/fluxo-caixa'
+      path: '/estudio/fluxo-caixa'
+      fullPath: '/estudio/fluxo-caixa'
+      preLoaderRoute: typeof AuthenticatedEstudioFluxoCaixaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/nexus/': {
       id: '/_authenticated/nexus/'
       path: '/nexus'
@@ -353,10 +493,17 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFuncionariosRoute: typeof AuthenticatedFuncionariosRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedTrocarSenhaRoute: typeof AuthenticatedTrocarSenhaRoute
+  AuthenticatedEstudioComissoesRoute: typeof AuthenticatedEstudioComissoesRoute
+  AuthenticatedEstudioConteudosRoute: typeof AuthenticatedEstudioConteudosRoute
+  AuthenticatedEstudioContratosRoute: typeof AuthenticatedEstudioContratosRoute
+  AuthenticatedEstudioFiliadosRoute: typeof AuthenticatedEstudioFiliadosRoute
+  AuthenticatedEstudioFinanceiroRoute: typeof AuthenticatedEstudioFinanceiroRoute
+  AuthenticatedEstudioFluxoCaixaRoute: typeof AuthenticatedEstudioFluxoCaixaRoute
   AuthenticatedNexusAuditoriaRoute: typeof AuthenticatedNexusAuditoriaRoute
   AuthenticatedNexusConfiguracoesRoute: typeof AuthenticatedNexusConfiguracoesRoute
   AuthenticatedNexusEmpresasRoute: typeof AuthenticatedNexusEmpresasRoute
   AuthenticatedNexusUsuariosRoute: typeof AuthenticatedNexusUsuariosRoute
+  AuthenticatedEstudioIndexRoute: typeof AuthenticatedEstudioIndexRoute
   AuthenticatedNexusIndexRoute: typeof AuthenticatedNexusIndexRoute
 }
 
@@ -368,10 +515,17 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFuncionariosRoute: AuthenticatedFuncionariosRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedTrocarSenhaRoute: AuthenticatedTrocarSenhaRoute,
+  AuthenticatedEstudioComissoesRoute: AuthenticatedEstudioComissoesRoute,
+  AuthenticatedEstudioConteudosRoute: AuthenticatedEstudioConteudosRoute,
+  AuthenticatedEstudioContratosRoute: AuthenticatedEstudioContratosRoute,
+  AuthenticatedEstudioFiliadosRoute: AuthenticatedEstudioFiliadosRoute,
+  AuthenticatedEstudioFinanceiroRoute: AuthenticatedEstudioFinanceiroRoute,
+  AuthenticatedEstudioFluxoCaixaRoute: AuthenticatedEstudioFluxoCaixaRoute,
   AuthenticatedNexusAuditoriaRoute: AuthenticatedNexusAuditoriaRoute,
   AuthenticatedNexusConfiguracoesRoute: AuthenticatedNexusConfiguracoesRoute,
   AuthenticatedNexusEmpresasRoute: AuthenticatedNexusEmpresasRoute,
   AuthenticatedNexusUsuariosRoute: AuthenticatedNexusUsuariosRoute,
+  AuthenticatedEstudioIndexRoute: AuthenticatedEstudioIndexRoute,
   AuthenticatedNexusIndexRoute: AuthenticatedNexusIndexRoute,
 }
 
