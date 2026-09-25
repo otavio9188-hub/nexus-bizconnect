@@ -127,12 +127,12 @@ export function AppShell({
           <X className="size-5" />
         </button>
       </div>
-      <div className="px-5 py-4">
+      <div className="px-4 py-5">
         <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
           {ctx?.isNexusOwner ? t("nav.platform") : (ctx?.company?.name ?? "")}
         </div>
       </div>
-      <nav className="flex-1 space-y-1 px-3">
+      <nav className="flex-1 space-y-1.5 px-3">
         {nav.map((item) => {
           const active = pathname === item.to || pathname.startsWith(item.to + "/");
           return (
@@ -140,11 +140,12 @@ export function AppShell({
               key={item.to}
               to={item.to}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${
+              className={`nexus-nav-item flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all ${
                 active
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
-                  : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  ? "font-medium"
+                  : "text-sidebar-foreground/75 hover:text-sidebar-accent-foreground"
               }`}
+              data-active={active ? "true" : "false"}
             >
               <item.icon className="size-4" />
               {item.label}
@@ -172,7 +173,7 @@ export function AppShell({
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="nexus-header sticky top-0 z-30 flex h-16 items-center gap-3 border-b px-4 backdrop-blur-xl md:px-8">
+        <header className="nexus-header sticky top-0 z-30 flex h-[72px] items-center gap-3 border-b px-4 backdrop-blur-xl md:px-8 lg:px-10">
           <button className="md:hidden" onClick={() => setMobileOpen(true)} aria-label="Menu">
             <Menu className="size-5" />
           </button>
@@ -296,8 +297,8 @@ export function AppShell({
           </DropdownMenu>
         </header>
 
-        <main className="nexus-main flex-1 p-4 md:p-8">
-          <div className="nexus-content">
+        <main className="nexus-main flex-1 p-5 md:p-8 lg:p-10">
+          <div className="nexus-content mx-auto w-full max-w-[1500px]">
           {isLoading ? (
             <div className="space-y-3">
               <Skeleton className="h-9 w-56" />
