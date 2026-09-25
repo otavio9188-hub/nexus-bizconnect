@@ -169,23 +169,82 @@ export const getStudioDashboard = createServerFn({ method: "GET" })
     start.setHours(0, 0, 0, 0);
     const startDate = start.toISOString().slice(0, 10);
 
-    const [customers, contracts, contents, affiliates, cash, receivable, payable, investments] =
+    const [customers, contracts, contents, affiliates, cash, receivable, payable, commissions, investments] =
       await Promise.all([
         context.supabase.from("customers").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "ACTIVE"),
         context.supabase.from("contracts").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "ACTIVE"),
         context.supabase.from("content_items").select("id,status,platform", { count: "exact" }).eq("company_id", companyId),
         context.supabase.from("affiliates").select("id", { count: "exact", head: true }).eq("company_id", companyId).eq("status", "ACTIVE"),
-        context.supabase.from("cash_transactions").select("type,amount").eq("company_id", companyId).gte("transaction_date", startDate).eq("status", "PAID"),
-        context.supabase.from("accounts_receivable").select("amount,status").eq("company_id", companyId),
+        context.supabase.from("cash_transactions").select("id,type,amount,reference_type,reference_id").eq("company_id", companyId).gte("transaction_date", startDate).eq("status", "PAID"),
+        context.supabase.from("accounts_receivable").select("id,amount,status,receipt_date").eq("company_id", companyId),
         context.supabase.from("accounts_payable").select("amount,status").eq("company_id", companyId),
+        context.supabase.from("commission_payments").select("id,amount,status,paid_at,due_date").eq("company_id", companyId),
         context.supabase.from("investments").select("invested_amount,current_value").eq("company_id", companyId).eq("status", "ACTIVE"),
       ]);
 
-    const income = (cash.data ?? []).filter((x) => x.type === "INCOME").reduce((s, x) => s + Number(x.amount || 0), 0);
-    const expenses = (cash.data ?? []).filter((x) => x.type === "EXPENSE").reduce((s, x) => s + Number(x.amount || 0), 0);
+    // Corrige registros financeiros pagos antes da integração automática com o fluxo de caixa.
+    // Assim a Visão Geral não fica em R$ 0 enquanto o Financeiro já possui receita/despesa paga.
+    const existingCash = cash.data ?? [];
+    const missingReceivables = (receivable.data ?? []).filter(
+      (row: any) =>
+        row.status === "PAID" &&
+        !existingCash.some(
+          (tx: any) =>
+            tx.reference_type === "accounts_receivable" && tx.reference_id === row.id,
+        ),
+    );
+    const missingCommissions = (commissions.data ?? []).filter(
+      (row: any) =>
+        row.status === "PAID" &&
+        !existingCash.some(
+          (tx: any) =>
+            tx.reference_type === "commission_payments" && tx.reference_id === row.id,
+        ),
+    );
+
+    if (missingReceivables.length || missingCommissions.length) {
+      const rows = [
+        ...missingReceivables.map((row: any) => ({
+          company_id: companyId,
+          type: "INCOME",
+          category: "Recebimentos",
+          description: "Recebimento",
+          amount: Number(row.amount),
+          transaction_date: row.receipt_date || new Date().toISOString().slice(0, 10),
+          status: "PAID",
+          reference_type: "accounts_receivable",
+          reference_id: row.id,
+          user_id: context.userId,
+        })),
+        ...missingCommissions.map((row: any) => ({
+          company_id: companyId,
+          type: "EXPENSE",
+          category: "Comissões",
+          description: "Comissão",
+          amount: Number(row.amount),
+          transaction_date: row.paid_at || new Date().toISOString().slice(0, 10),
+          status: "PAID",
+          reference_type: "commission_payments",
+          reference_id: row.id,
+          user_id: context.userId,
+        })),
+      ];
+      await context.supabase.from("cash_transactions").insert(rows as any);
+    }
+
+    const { data: refreshedCash } = await context.supabase
+      .from("cash_transactions")
+      .select("type,amount")
+      .eq("company_id", companyId)
+      .gte("transaction_date", startDate)
+      .eq("status", "PAID");
+
+    const income = (refreshedCash ?? []).filter((x) => x.type === "INCOME").reduce((s, x) => s + Number(x.amount || 0), 0);
+    const expenses = (refreshedCash ?? []).filter((x) => x.type === "EXPENSE").reduce((s, x) => s + Number(x.amount || 0), 0);
     const pendingReceivable = (receivable.data ?? []).filter((x) => x.status === "PENDING" || x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0);
     const overdueReceivable = (receivable.data ?? []).filter((x) => x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0);
-    const pendingPayable = (payable.data ?? []).filter((x) => x.status === "PENDING" || x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0);
+    const pendingPayable = (payable.data ?? []).filter((x) => x.status === "PENDING" || x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0)
+      + (commissions.data ?? []).filter((x) => x.status === "PENDING" || x.status === "OVERDUE").reduce((s, x) => s + Number(x.amount || 0), 0);
     const investmentValue = (investments.data ?? []).reduce((s, x) => s + Number(x.current_value || 0), 0);
 
     const contentRows = contents.data ?? [];
