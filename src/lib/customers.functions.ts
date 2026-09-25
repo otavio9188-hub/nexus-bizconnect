@@ -20,7 +20,7 @@ const customerIdSchema = z.object({ id: z.string().uuid() });
 
 async function getCustomerContext(supabase: Db, userId: string) {
   const ctx = await loadSessionContext(supabase, userId);
-  if (!ctx.profile.company_id) throw FORBIDDEN();
+  if (!ctx.activeCompanyId) throw FORBIDDEN();
   if (ctx.profile.status !== "ACTIVE" || ctx.company?.status !== "ACTIVE") {
     throw new AppError(
       "COMPANY_BLOCKED",
@@ -52,7 +52,7 @@ export const listCustomers = createServerFn({ method: "GET" })
     const { data, error } = await supabaseAdmin
       .from("customers")
       .select("*")
-      .eq("company_id", ctx.profile.company_id!)
+      .eq("company_id", ctx.activeCompanyId!)
       .order("name", { ascending: true });
 
     if (error) throw new AppError("LIST_FAILED", "Não foi possível carregar os clientes.");
@@ -69,7 +69,7 @@ export const createCustomer = createServerFn({ method: "POST" })
     const { data: created, error } = await supabaseAdmin
       .from("customers")
       .insert({
-        company_id: ctx.profile.company_id!,
+        company_id: ctx.activeCompanyId!,
         name: data.name,
         document: data.document || null,
         email: data.email || null,
@@ -115,7 +115,7 @@ export const updateCustomer = createServerFn({ method: "POST" })
       .from("customers")
       .select("*")
       .eq("id", data.id)
-      .eq("company_id", ctx.profile.company_id!)
+      .eq("company_id", ctx.activeCompanyId!)
       .maybeSingle();
 
     if (!before) throw new AppError("NOT_FOUND", "Cliente não encontrado.");
@@ -135,7 +135,7 @@ export const updateCustomer = createServerFn({ method: "POST" })
         notes: fields.notes || null,
       })
       .eq("id", id)
-      .eq("company_id", ctx.profile.company_id!)
+      .eq("company_id", ctx.activeCompanyId!)
       .select("*")
       .single();
 
@@ -171,7 +171,7 @@ export const setCustomerStatus = createServerFn({ method: "POST" })
       .from("customers")
       .select("id, name, status")
       .eq("id", data.id)
-      .eq("company_id", ctx.profile.company_id!)
+      .eq("company_id", ctx.activeCompanyId!)
       .maybeSingle();
 
     if (!before) throw new AppError("NOT_FOUND", "Cliente não encontrado.");
@@ -180,7 +180,7 @@ export const setCustomerStatus = createServerFn({ method: "POST" })
       .from("customers")
       .update({ status: data.status })
       .eq("id", data.id)
-      .eq("company_id", ctx.profile.company_id!)
+      .eq("company_id", ctx.activeCompanyId!)
       .select("*")
       .single();
 
@@ -214,7 +214,7 @@ export const deleteCustomer = createServerFn({ method: "POST" })
       .from("customers")
       .select("*")
       .eq("id", data.id)
-      .eq("company_id", ctx.profile.company_id!)
+      .eq("company_id", ctx.activeCompanyId!)
       .maybeSingle();
 
     if (!customer) throw new AppError("NOT_FOUND", "Cliente não encontrado.");
@@ -223,7 +223,7 @@ export const deleteCustomer = createServerFn({ method: "POST" })
       .from("customers")
       .delete()
       .eq("id", data.id)
-      .eq("company_id", ctx.profile.company_id!);
+      .eq("company_id", ctx.activeCompanyId!);
 
     if (error) throw new AppError("DELETE_FAILED", "Não foi possível excluir o cliente.");
 
