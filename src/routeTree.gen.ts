@@ -19,6 +19,7 @@ import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authentica
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedFuncionariosRouteImport } from './routes/_authenticated/funcionarios'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
 import { Route as AuthenticatedTrocarSenhaRouteImport } from './routes/_authenticated/trocar-senha'
 import { Route as AuthenticatedEstudioIndexRouteImport } from './routes/_authenticated/estudio/index'
 import { Route as AuthenticatedEstudioComissoesRouteImport } from './routes/_authenticated/estudio/comissoes'
@@ -28,8 +29,8 @@ import { Route as AuthenticatedEstudioFiliadosRouteImport } from './routes/_auth
 import { Route as AuthenticatedEstudioFinanceiroRouteImport } from './routes/_authenticated/estudio/financeiro'
 import { Route as AuthenticatedEstudioFluxoCaixaRouteImport } from './routes/_authenticated/estudio/fluxo-caixa'
 import { Route as AuthenticatedEstudioFrenteCaixaRouteImport } from './routes/_authenticated/estudio/frente-caixa'
-import { Route as AuthenticatedEstudioNotasEntradaRouteImport } from './routes/_authenticated/estudio/notas-entrada'
 import { Route as AuthenticatedEstudioNotasEmitidasRouteImport } from './routes/_authenticated/estudio/notas-emitidas'
+import { Route as AuthenticatedEstudioNotasEntradaRouteImport } from './routes/_authenticated/estudio/notas-entrada'
 import { Route as AuthenticatedNexusIndexRouteImport } from './routes/_authenticated/nexus/index'
 import { Route as AuthenticatedNexusAuditoriaRouteImport } from './routes/_authenticated/nexus/auditoria'
 import { Route as AuthenticatedNexusConfiguracoesRouteImport } from './routes/_authenticated/nexus/configuracoes'
@@ -87,6 +88,11 @@ const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
+  id: '/produtos',
+  path: '/produtos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTrocarSenhaRoute =
   AuthenticatedTrocarSenhaRouteImport.update({
     id: '/trocar-senha',
@@ -135,21 +141,24 @@ const AuthenticatedEstudioFluxoCaixaRoute =
     path: '/estudio/fluxo-caixa',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedEstudioFrenteCaixaRoute = AuthenticatedEstudioFrenteCaixaRouteImport.update({
-  id: '/estudio/frente-caixa',
-  path: '/estudio/frente-caixa',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedEstudioNotasEntradaRoute = AuthenticatedEstudioNotasEntradaRouteImport.update({
-  id: '/estudio/notas-entrada',
-  path: '/estudio/notas-entrada',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedEstudioNotasEmitidasRoute = AuthenticatedEstudioNotasEmitidasRouteImport.update({
-  id: '/estudio/notas-emitidas',
-  path: '/estudio/notas-emitidas',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedEstudioFrenteCaixaRoute =
+  AuthenticatedEstudioFrenteCaixaRouteImport.update({
+    id: '/estudio/frente-caixa',
+    path: '/estudio/frente-caixa',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioNotasEmitidasRoute =
+  AuthenticatedEstudioNotasEmitidasRouteImport.update({
+    id: '/estudio/notas-emitidas',
+    path: '/estudio/notas-emitidas',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEstudioNotasEntradaRoute =
+  AuthenticatedEstudioNotasEntradaRouteImport.update({
+    id: '/estudio/notas-entrada',
+    path: '/estudio/notas-entrada',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedNexusIndexRoute = AuthenticatedNexusIndexRouteImport.update({
   id: '/nexus/',
   path: '/nexus/',
@@ -190,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/clientes': typeof AuthenticatedClientesRoute
   '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
+  '/produtos': typeof AuthenticatedProdutosRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
   '/estudio/comissoes': typeof AuthenticatedEstudioComissoesRoute
   '/estudio/conteudos': typeof AuthenticatedEstudioConteudosRoute
@@ -198,14 +208,8 @@ export interface FileRoutesByFullPath {
   '/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
   '/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
   '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
-  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
   '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
-  '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
   '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
-  '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
-  '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
-  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
-  '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
   '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
@@ -223,6 +227,7 @@ export interface FileRoutesByTo {
   '/clientes': typeof AuthenticatedClientesRoute
   '/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/painel': typeof AuthenticatedPainelRoute
+  '/produtos': typeof AuthenticatedProdutosRoute
   '/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
   '/estudio/comissoes': typeof AuthenticatedEstudioComissoesRoute
   '/estudio/conteudos': typeof AuthenticatedEstudioConteudosRoute
@@ -231,8 +236,8 @@ export interface FileRoutesByTo {
   '/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
   '/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
   '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
-  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
   '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
+  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
   '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
@@ -252,6 +257,7 @@ export interface FileRoutesById {
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/funcionarios': typeof AuthenticatedFuncionariosRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
   '/_authenticated/trocar-senha': typeof AuthenticatedTrocarSenhaRoute
   '/_authenticated/estudio/comissoes': typeof AuthenticatedEstudioComissoesRoute
   '/_authenticated/estudio/conteudos': typeof AuthenticatedEstudioConteudosRoute
@@ -259,6 +265,9 @@ export interface FileRoutesById {
   '/_authenticated/estudio/filiados': typeof AuthenticatedEstudioFiliadosRoute
   '/_authenticated/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
   '/_authenticated/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
+  '/_authenticated/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
+  '/_authenticated/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
+  '/_authenticated/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
   '/_authenticated/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/_authenticated/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/_authenticated/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
@@ -278,6 +287,7 @@ export interface FileRouteTypes {
     | '/clientes'
     | '/funcionarios'
     | '/painel'
+    | '/produtos'
     | '/trocar-senha'
     | '/estudio/comissoes'
     | '/estudio/conteudos'
@@ -286,8 +296,8 @@ export interface FileRouteTypes {
     | '/estudio/financeiro'
     | '/estudio/fluxo-caixa'
     | '/estudio/frente-caixa'
-    | '/estudio/notas-entrada'
     | '/estudio/notas-emitidas'
+    | '/estudio/notas-entrada'
     | '/nexus/auditoria'
     | '/nexus/configuracoes'
     | '/nexus/empresas'
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/clientes'
     | '/funcionarios'
     | '/painel'
+    | '/produtos'
     | '/trocar-senha'
     | '/estudio/comissoes'
     | '/estudio/conteudos'
@@ -313,8 +324,8 @@ export interface FileRouteTypes {
     | '/estudio/financeiro'
     | '/estudio/fluxo-caixa'
     | '/estudio/frente-caixa'
-    | '/estudio/notas-entrada'
     | '/estudio/notas-emitidas'
+    | '/estudio/notas-entrada'
     | '/nexus/auditoria'
     | '/nexus/configuracoes'
     | '/nexus/empresas'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/_authenticated/clientes'
     | '/_authenticated/funcionarios'
     | '/_authenticated/painel'
+    | '/_authenticated/produtos'
     | '/_authenticated/trocar-senha'
     | '/_authenticated/estudio/comissoes'
     | '/_authenticated/estudio/conteudos'
@@ -341,8 +353,8 @@ export interface FileRouteTypes {
     | '/_authenticated/estudio/financeiro'
     | '/_authenticated/estudio/fluxo-caixa'
     | '/_authenticated/estudio/frente-caixa'
-    | '/_authenticated/estudio/notas-entrada'
     | '/_authenticated/estudio/notas-emitidas'
+    | '/_authenticated/estudio/notas-entrada'
     | '/_authenticated/nexus/auditoria'
     | '/_authenticated/nexus/configuracoes'
     | '/_authenticated/nexus/empresas'
@@ -430,6 +442,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/produtos': {
+      id: '/_authenticated/produtos'
+      path: '/produtos'
+      fullPath: '/produtos'
+      preLoaderRoute: typeof AuthenticatedProdutosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/trocar-senha': {
       id: '/_authenticated/trocar-senha'
       path: '/trocar-senha'
@@ -493,18 +512,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEstudioFrenteCaixaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/estudio/notas-entrada': {
-      id: '/_authenticated/estudio/notas-entrada'
-      path: '/estudio/notas-entrada'
-      fullPath: '/estudio/notas-entrada'
-      preLoaderRoute: typeof AuthenticatedEstudioNotasEntradaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/estudio/notas-emitidas': {
       id: '/_authenticated/estudio/notas-emitidas'
       path: '/estudio/notas-emitidas'
       fullPath: '/estudio/notas-emitidas'
       preLoaderRoute: typeof AuthenticatedEstudioNotasEmitidasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/notas-entrada': {
+      id: '/_authenticated/estudio/notas-entrada'
+      path: '/estudio/notas-entrada'
+      fullPath: '/estudio/notas-entrada'
+      preLoaderRoute: typeof AuthenticatedEstudioNotasEntradaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/nexus/': {
@@ -552,6 +571,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedFuncionariosRoute: typeof AuthenticatedFuncionariosRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+  AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
   AuthenticatedTrocarSenhaRoute: typeof AuthenticatedTrocarSenhaRoute
   AuthenticatedEstudioComissoesRoute: typeof AuthenticatedEstudioComissoesRoute
   AuthenticatedEstudioConteudosRoute: typeof AuthenticatedEstudioConteudosRoute
@@ -560,8 +580,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEstudioFinanceiroRoute: typeof AuthenticatedEstudioFinanceiroRoute
   AuthenticatedEstudioFluxoCaixaRoute: typeof AuthenticatedEstudioFluxoCaixaRoute
   AuthenticatedEstudioFrenteCaixaRoute: typeof AuthenticatedEstudioFrenteCaixaRoute
-  AuthenticatedEstudioNotasEntradaRoute: typeof AuthenticatedEstudioNotasEntradaRoute
   AuthenticatedEstudioNotasEmitidasRoute: typeof AuthenticatedEstudioNotasEmitidasRoute
+  AuthenticatedEstudioNotasEntradaRoute: typeof AuthenticatedEstudioNotasEntradaRoute
   AuthenticatedNexusAuditoriaRoute: typeof AuthenticatedNexusAuditoriaRoute
   AuthenticatedNexusConfiguracoesRoute: typeof AuthenticatedNexusConfiguracoesRoute
   AuthenticatedNexusEmpresasRoute: typeof AuthenticatedNexusEmpresasRoute
@@ -577,6 +597,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedFuncionariosRoute: AuthenticatedFuncionariosRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+  AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
   AuthenticatedTrocarSenhaRoute: AuthenticatedTrocarSenhaRoute,
   AuthenticatedEstudioComissoesRoute: AuthenticatedEstudioComissoesRoute,
   AuthenticatedEstudioConteudosRoute: AuthenticatedEstudioConteudosRoute,
@@ -585,8 +606,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEstudioFinanceiroRoute: AuthenticatedEstudioFinanceiroRoute,
   AuthenticatedEstudioFluxoCaixaRoute: AuthenticatedEstudioFluxoCaixaRoute,
   AuthenticatedEstudioFrenteCaixaRoute: AuthenticatedEstudioFrenteCaixaRoute,
+  AuthenticatedEstudioNotasEmitidasRoute:
+    AuthenticatedEstudioNotasEmitidasRoute,
   AuthenticatedEstudioNotasEntradaRoute: AuthenticatedEstudioNotasEntradaRoute,
-  AuthenticatedEstudioNotasEmitidasRoute: AuthenticatedEstudioNotasEmitidasRoute,
   AuthenticatedNexusAuditoriaRoute: AuthenticatedNexusAuditoriaRoute,
   AuthenticatedNexusConfiguracoesRoute: AuthenticatedNexusConfiguracoesRoute,
   AuthenticatedNexusEmpresasRoute: AuthenticatedNexusEmpresasRoute,
