@@ -27,6 +27,9 @@ import { Route as AuthenticatedEstudioContratosRouteImport } from './routes/_aut
 import { Route as AuthenticatedEstudioFiliadosRouteImport } from './routes/_authenticated/estudio/filiados'
 import { Route as AuthenticatedEstudioFinanceiroRouteImport } from './routes/_authenticated/estudio/financeiro'
 import { Route as AuthenticatedEstudioFluxoCaixaRouteImport } from './routes/_authenticated/estudio/fluxo-caixa'
+import { Route as AuthenticatedEstudioFrenteCaixaRouteImport } from './routes/_authenticated/estudio/frente-caixa'
+import { Route as AuthenticatedEstudioNotasEntradaRouteImport } from './routes/_authenticated/estudio/notas-entrada'
+import { Route as AuthenticatedEstudioNotasEmitidasRouteImport } from './routes/_authenticated/estudio/notas-emitidas'
 import { Route as AuthenticatedNexusIndexRouteImport } from './routes/_authenticated/nexus/index'
 import { Route as AuthenticatedNexusAuditoriaRouteImport } from './routes/_authenticated/nexus/auditoria'
 import { Route as AuthenticatedNexusConfiguracoesRouteImport } from './routes/_authenticated/nexus/configuracoes'
@@ -132,6 +135,21 @@ const AuthenticatedEstudioFluxoCaixaRoute =
     path: '/estudio/fluxo-caixa',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedEstudioFrenteCaixaRoute = AuthenticatedEstudioFrenteCaixaRouteImport.update({
+  id: '/estudio/frente-caixa',
+  path: '/estudio/frente-caixa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEstudioNotasEntradaRoute = AuthenticatedEstudioNotasEntradaRouteImport.update({
+  id: '/estudio/notas-entrada',
+  path: '/estudio/notas-entrada',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEstudioNotasEmitidasRoute = AuthenticatedEstudioNotasEmitidasRouteImport.update({
+  id: '/estudio/notas-emitidas',
+  path: '/estudio/notas-emitidas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedNexusIndexRoute = AuthenticatedNexusIndexRouteImport.update({
   id: '/nexus/',
   path: '/nexus/',
@@ -179,6 +197,15 @@ export interface FileRoutesByFullPath {
   '/estudio/filiados': typeof AuthenticatedEstudioFiliadosRoute
   '/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
   '/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
+  '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
+  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
+  '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
+  '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
+  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
+  '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
+  '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
+  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
+  '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
   '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
@@ -499,6 +526,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEstudioFiliadosRoute: typeof AuthenticatedEstudioFiliadosRoute
   AuthenticatedEstudioFinanceiroRoute: typeof AuthenticatedEstudioFinanceiroRoute
   AuthenticatedEstudioFluxoCaixaRoute: typeof AuthenticatedEstudioFluxoCaixaRoute
+  AuthenticatedEstudioFrenteCaixaRoute: typeof AuthenticatedEstudioFrenteCaixaRoute
+  AuthenticatedEstudioNotasEntradaRoute: typeof AuthenticatedEstudioNotasEntradaRoute
+  AuthenticatedEstudioNotasEmitidasRoute: typeof AuthenticatedEstudioNotasEmitidasRoute
   AuthenticatedNexusAuditoriaRoute: typeof AuthenticatedNexusAuditoriaRoute
   AuthenticatedNexusConfiguracoesRoute: typeof AuthenticatedNexusConfiguracoesRoute
   AuthenticatedNexusEmpresasRoute: typeof AuthenticatedNexusEmpresasRoute
@@ -521,6 +551,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEstudioFiliadosRoute: AuthenticatedEstudioFiliadosRoute,
   AuthenticatedEstudioFinanceiroRoute: AuthenticatedEstudioFinanceiroRoute,
   AuthenticatedEstudioFluxoCaixaRoute: AuthenticatedEstudioFluxoCaixaRoute,
+  AuthenticatedEstudioFrenteCaixaRoute: AuthenticatedEstudioFrenteCaixaRoute,
+  AuthenticatedEstudioNotasEntradaRoute: AuthenticatedEstudioNotasEntradaRoute,
+  AuthenticatedEstudioNotasEmitidasRoute: AuthenticatedEstudioNotasEmitidasRoute,
   AuthenticatedNexusAuditoriaRoute: AuthenticatedNexusAuditoriaRoute,
   AuthenticatedNexusConfiguracoesRoute: AuthenticatedNexusConfiguracoesRoute,
   AuthenticatedNexusEmpresasRoute: AuthenticatedNexusEmpresasRoute,
