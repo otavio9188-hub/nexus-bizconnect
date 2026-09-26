@@ -15,6 +15,9 @@ import {
   ScrollText,
   Settings,
   ShieldCheck,
+  ShoppingCart,
+  FileInput,
+  FileCheck2,
   Users,
   X,
 } from "lucide-react";
@@ -106,6 +109,12 @@ export function AppShell({
       nav.push({ to: "/clientes", label: t("nav.customers"), icon: Users });
     if (can(ctx, "employees", "VIEW"))
       nav.push({ to: "/funcionarios", label: t("nav.employees"), icon: Users });
+    if (can(ctx, "sales", "VIEW"))
+      nav.push({ to: "/estudio/frente-caixa", label: "Frente de Caixa", icon: ShoppingCart });
+    if (can(ctx, "fiscal", "VIEW")) {
+      nav.push({ to: "/estudio/notas-entrada", label: "Notas de Entrada", icon: FileInput });
+      nav.push({ to: "/estudio/notas-emitidas", label: "Notas Emitidas", icon: FileCheck2 });
+    }
     if (can(ctx, "audit_logs", "VIEW"))
       nav.push({ to: "/auditoria", label: t("nav.audit_logs"), icon: ScrollText });
     nav.push({ to: "/ajuda", label: t("nav.help"), icon: LifeBuoy });
