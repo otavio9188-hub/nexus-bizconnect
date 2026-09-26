@@ -45,8 +45,12 @@ export const createProduct = createServerFn({ method: "POST" }).middleware([requ
   const ctx = await requireProductPermission(context.supabase, context.userId, "CREATE");
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: created, error } = await supabaseAdmin.from("products").insert({ company_id: ctx.activeCompanyId!, ...data, sku: data.sku || null, barcode: data.barcode || null, category: data.category || null, ncm: data.ncm || null, cest: data.cest || null, origin: data.origin || null, image_url: data.image_url || null, notes: data.notes || null }).select("*").single();
-  if (error || !created) throw new AppError("CREATE_FAILED", "Não foi possível cadastrar o produto.");
-  await writeAudit(supabaseAdmin, { company_id: ctx.profile.company_id, user_id: context.userId, user_email: ctx.profile.email, action: "PRODUCT_CREATED", module: "products", record_id: created.id, record_label: created.name, new_value: created });
+  if (error || !created) {
+    console.error("[Products] createProduct failed:", error);
+    const detail = error?.message || error?.details || error?.hint;
+    throw new AppError("CREATE_FAILED", detail ? `Não foi possível cadastrar o produto: ${detail}` : "Não foi possível cadastrar o produto.");
+  }
+  await writeAudit(supabaseAdmin, { company_id: ctx.activeCompanyId, user_id: context.userId, user_email: ctx.profile.email, action: "PRODUCT_CREATED", module: "products", record_id: created.id, record_label: created.name, new_value: created });
   return created;
 });
 
@@ -58,7 +62,7 @@ export const updateProduct = createServerFn({ method: "POST" }).middleware([requ
   const { id, ...fields } = data;
   const { data: updated, error } = await supabaseAdmin.from("products").update({ ...fields, sku: fields.sku || null, barcode: fields.barcode || null, category: fields.category || null, ncm: fields.ncm || null, cest: fields.cest || null, origin: fields.origin || null, image_url: fields.image_url || null, notes: fields.notes || null }).eq("id", id).eq("company_id", ctx.activeCompanyId!).select("*").single();
   if (error || !updated) throw new AppError("UPDATE_FAILED", "Não foi possível atualizar o produto.");
-  await writeAudit(supabaseAdmin, { company_id: ctx.profile.company_id, user_id: context.userId, user_email: ctx.profile.email, action: "PRODUCT_UPDATED", module: "products", record_id: updated.id, record_label: updated.name, old_value: before, new_value: updated });
+  await writeAudit(supabaseAdmin, { company_id: ctx.activeCompanyId, user_id: context.userId, user_email: ctx.profile.email, action: "PRODUCT_UPDATED", module: "products", record_id: updated.id, record_label: updated.name, old_value: before, new_value: updated });
   return updated;
 });
 
