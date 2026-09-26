@@ -14,7 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      [table: string]: any
       accounts_payable: {
         Row: {
           amount: number
@@ -33,7 +32,6 @@ export type Database = {
         Insert: {
           amount: number
           company_id: string
-          contract_id?: string | null
           created_at?: string
           description: string
           due_date: string
@@ -48,7 +46,6 @@ export type Database = {
         Update: {
           amount?: number
           company_id?: string
-          contract_id?: string | null
           created_at?: string
           description?: string
           due_date?: string
@@ -86,10 +83,9 @@ export type Database = {
       }
       accounts_receivable: {
         Row: {
-          [key: string]: any
-          contract_id: string | null
           amount: number
           company_id: string
+          contract_id: string | null
           created_at: string
           customer_id: string | null
           description: string
@@ -103,8 +99,8 @@ export type Database = {
         }
         Insert: {
           amount: number
-          contract_id?: string | null
           company_id: string
+          contract_id?: string | null
           created_at?: string
           customer_id?: string | null
           description: string
@@ -118,8 +114,8 @@ export type Database = {
         }
         Update: {
           amount?: number
-          contract_id?: string | null
           company_id?: string
+          contract_id?: string | null
           created_at?: string
           customer_id?: string | null
           description?: string
@@ -132,13 +128,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "accounts_receivable_contract_id_fkey"
-            columns: ["contract_id"]
-            isOneToOne: false
-            referencedRelation: "contracts"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "accounts_receivable_company_id_fkey"
             columns: ["company_id"]
@@ -158,6 +147,59 @@ export type Database = {
             columns: ["sale_id"]
             isOneToOne: false
             referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliates: {
+        Row: {
+          company_id: string
+          created_at: string
+          document: string | null
+          email: string | null
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          pix_key: string | null
+          registered_at: string
+          status: Database["public"]["Enums"]["user_status"]
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          document?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          pix_key?: string | null
+          registered_at?: string
+          status?: Database["public"]["Enums"]["user_status"]
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          document?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          pix_key?: string | null
+          registered_at?: string
+          status?: Database["public"]["Enums"]["user_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliates_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -312,15 +354,79 @@ export type Database = {
           },
         ]
       }
+      commission_payments: {
+        Row: {
+          affiliate_id: string
+          amount: number
+          company_id: string
+          contract_id: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          notes: string | null
+          paid_at: string | null
+          status: Database["public"]["Enums"]["finance_status"]
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id: string
+          amount?: number
+          company_id: string
+          contract_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["finance_status"]
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string
+          amount?: number
+          company_id?: string
+          contract_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["finance_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_payments_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_payments_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
-          [key: string]: any
           address: string | null
           city: string | null
           cnpj: string | null
           created_at: string
           email: string | null
           id: string
+          kind: Database["public"]["Enums"]["company_kind"]
           last_activity_at: string | null
           legal_name: string | null
           name: string
@@ -328,7 +434,6 @@ export type Database = {
           plan: string
           state: string | null
           status: Database["public"]["Enums"]["company_status"]
-          kind: Database["public"]["Enums"]["company_kind"]
           updated_at: string
           zip_code: string | null
         }
@@ -339,6 +444,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          kind?: Database["public"]["Enums"]["company_kind"]
           last_activity_at?: string | null
           legal_name?: string | null
           name: string
@@ -346,7 +452,6 @@ export type Database = {
           plan?: string
           state?: string | null
           status?: Database["public"]["Enums"]["company_status"]
-          kind?: Database["public"]["Enums"]["company_kind"]
           updated_at?: string
           zip_code?: string | null
         }
@@ -357,6 +462,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          kind?: Database["public"]["Enums"]["company_kind"]
           last_activity_at?: string | null
           legal_name?: string | null
           name?: string
@@ -364,11 +470,155 @@ export type Database = {
           plan?: string
           state?: string | null
           status?: Database["public"]["Enums"]["company_status"]
-          kind?: Database["public"]["Enums"]["company_kind"]
           updated_at?: string
           zip_code?: string | null
         }
         Relationships: []
+      }
+      content_items: {
+        Row: {
+          caption: string | null
+          company_id: string
+          created_at: string
+          customer_id: string | null
+          format: string
+          id: string
+          media_url: string | null
+          notes: string | null
+          platform: string
+          published_at: string | null
+          responsible_user_id: string | null
+          scheduled_at: string | null
+          status: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          caption?: string | null
+          company_id: string
+          created_at?: string
+          customer_id?: string | null
+          format: string
+          id?: string
+          media_url?: string | null
+          notes?: string | null
+          platform: string
+          published_at?: string | null
+          responsible_user_id?: string | null
+          scheduled_at?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          caption?: string | null
+          company_id?: string
+          created_at?: string
+          customer_id?: string | null
+          format?: string
+          id?: string
+          media_url?: string | null
+          notes?: string | null
+          platform?: string
+          published_at?: string | null
+          responsible_user_id?: string | null
+          scheduled_at?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_items_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          affiliate_id: string | null
+          commission_percent: number
+          commission_value: number
+          company_id: string
+          created_at: string
+          customer_id: string | null
+          end_date: string | null
+          id: string
+          monthly_value: number
+          notes: string | null
+          service: string | null
+          start_date: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id?: string | null
+          commission_percent?: number
+          commission_value?: number
+          company_id: string
+          created_at?: string
+          customer_id?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_value?: number
+          notes?: string | null
+          service?: string | null
+          start_date?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string | null
+          commission_percent?: number
+          commission_value?: number
+          company_id?: string
+          created_at?: string
+          customer_id?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_value?: number
+          notes?: string | null
+          service?: string | null
+          start_date?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customers: {
         Row: {
@@ -609,58 +859,10 @@ export type Database = {
           },
         ]
       }
-      affiliates: {
-        Row: { id:string; company_id:string; full_name:string; document:string|null; phone:string|null; email:string|null; pix_key:string|null; registered_at:string; status:Database["public"]["Enums"]["user_status"]; notes:string|null; created_at:string; updated_at:string };
-        Insert: { id?:string; company_id:string; full_name:string; document?:string|null; phone?:string|null; email?:string|null; pix_key?:string|null; registered_at?:string; status?:Database["public"]["Enums"]["user_status"]; notes?:string|null; created_at?:string; updated_at?:string };
-        Update: { id?:string; company_id?:string; full_name?:string; document?:string|null; phone?:string|null; email?:string|null; pix_key?:string|null; registered_at?:string; status?:Database["public"]["Enums"]["user_status"]; notes?:string|null; created_at?:string; updated_at?:string };
-        Relationships:[{foreignKeyName:"affiliates_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"];}];
-      }
-      contracts: {
-        Row:{id:string;company_id:string;customer_id:string|null;affiliate_id:string|null;title:string;service:string|null;start_date:string|null;end_date:string|null;monthly_value:number;commission_percent:number;commission_value:number;notes:string|null;status:string;created_at:string;updated_at:string};
-        Insert:{id?:string;company_id:string;customer_id?:string|null;affiliate_id?:string|null;title:string;service?:string|null;start_date?:string|null;end_date?:string|null;monthly_value?:number;commission_value?:number;commission_percent?:number;notes?:string|null;status?:string;created_at?:string;updated_at?:string};
-        Update:{id?:string;company_id?:string;customer_id?:string|null;affiliate_id?:string|null;title?:string;service?:string|null;start_date?:string|null;end_date?:string|null;monthly_value?:number;commission_value?:number;commission_percent?:number;notes?:string|null;status?:string;created_at?:string;updated_at?:string};
-        Relationships:[
-          {foreignKeyName:"contracts_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"]},
-          {foreignKeyName:"contracts_customer_id_fkey";columns:["customer_id"];isOneToOne:false;referencedRelation:"customers";referencedColumns:["id"]},
-          {foreignKeyName:"contracts_affiliate_id_fkey";columns:["affiliate_id"];isOneToOne:false;referencedRelation:"affiliates";referencedColumns:["id"]}
-        ];
-      }
-      content_items: {
-        Row:{id:string;company_id:string;customer_id:string|null;responsible_user_id:string|null;platform:string;format:string;title:string|null;caption:string|null;media_url:string|null;scheduled_at:string|null;published_at:string|null;status:string;notes:string|null;created_at:string;updated_at:string};
-        Insert:{id?:string;company_id:string;customer_id?:string|null;responsible_user_id?:string|null;platform:string;format:string;title?:string|null;caption?:string|null;media_url?:string|null;scheduled_at?:string|null;published_at?:string|null;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
-        Update:{id?:string;company_id?:string;customer_id?:string|null;responsible_user_id?:string|null;platform?:string;format?:string;title?:string|null;caption?:string|null;media_url?:string|null;scheduled_at?:string|null;published_at?:string|null;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
-        Relationships:[
-          {foreignKeyName:"content_items_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"]},
-          {foreignKeyName:"content_items_customer_id_fkey";columns:["customer_id"];isOneToOne:false;referencedRelation:"customers";referencedColumns:["id"]},
-          {foreignKeyName:"content_items_responsible_user_id_fkey";columns:["responsible_user_id"];isOneToOne:false;referencedRelation:"profiles";referencedColumns:["id"]}
-        ];
-      }
-      commission_payments: {
-        Row:{id:string;company_id:string;affiliate_id:string;contract_id:string|null;amount:number;status:Database["public"]["Enums"]["finance_status"];due_date:string|null;paid_at:string|null;notes:string|null;created_at:string;updated_at:string};
-        Insert:{id?:string;company_id:string;affiliate_id:string;contract_id?:string|null;amount:number;status?:Database["public"]["Enums"]["finance_status"];due_date?:string|null;paid_at?:string|null;notes?:string|null;created_at?:string;updated_at?:string};
-        Update:{id?:string;company_id?:string;affiliate_id?:string;contract_id?:string|null;amount?:number;status?:Database["public"]["Enums"]["finance_status"];due_date?:string|null;paid_at?:string|null;notes?:string|null;created_at?:string;updated_at?:string};
-        Relationships:[
-          {foreignKeyName:"commission_payments_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"]},
-          {foreignKeyName:"commission_payments_affiliate_id_fkey";columns:["affiliate_id"];isOneToOne:false;referencedRelation:"affiliates";referencedColumns:["id"]},
-          {foreignKeyName:"commission_payments_contract_id_fkey";columns:["contract_id"];isOneToOne:false;referencedRelation:"contracts";referencedColumns:["id"]}
-        ];
-      }
-      investments: {
-        Row:{id:string;company_id:string;name:string;type:string|null;institution:string|null;invested_amount:number;current_value:number;invested_at:string;status:string;notes:string|null;created_at:string;updated_at:string};
-        Insert:{id?:string;company_id:string;name:string;type?:string|null;institution?:string|null;invested_amount?:number;current_value?:number;invested_at?:string;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
-        Update:{id?:string;company_id?:string;name?:string;type?:string|null;institution?:string|null;invested_amount?:number;current_value?:number;invested_at?:string;status?:string;notes?:string|null;created_at?:string;updated_at?:string};
-        Relationships:[{foreignKeyName:"investments_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"];}];
-      }
-      fiscal_documents: {
-        Row:{id:string;company_id:string;document_type:string;provider:string|null;external_id:string|null;number:string|null;series:string|null;access_key:string|null;status:string;issued_at:string|null;xml_url:string|null;pdf_url:string|null;error:string|null;metadata:Json|null;created_at:string;updated_at:string};
-        Insert:{id?:string;company_id:string;document_type:string;provider?:string|null;external_id?:string|null;number?:string|null;series?:string|null;access_key?:string|null;status?:string;issued_at?:string|null;xml_url?:string|null;pdf_url?:string|null;error?:string|null;metadata?:Json|null;created_at?:string;updated_at?:string};
-        Update:{id?:string;company_id?:string;document_type?:string;provider?:string|null;external_id?:string|null;number?:string|null;series?:string|null;access_key?:string|null;status?:string;issued_at?:string|null;xml_url?:string|null;pdf_url?:string|null;error?:string|null;metadata?:Json|null;created_at?:string;updated_at?:string};
-        Relationships:[{foreignKeyName:"fiscal_documents_company_id_fkey";columns:["company_id"];isOneToOne:false;referencedRelation:"companies";referencedColumns:["id"];}];
-      }
       profiles: {
         Row: {
-          company_id: string | null
           active_company_id: string | null
+          company_id: string | null
           cpf: string | null
           created_at: string
           department: string | null
@@ -675,8 +877,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          company_id?: string | null
           active_company_id?: string | null
+          company_id?: string | null
           cpf?: string | null
           created_at?: string
           department?: string | null
@@ -691,6 +893,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          active_company_id?: string | null
           company_id?: string | null
           cpf?: string | null
           created_at?: string
@@ -706,6 +909,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_active_company_id_fkey"
+            columns: ["active_company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "profiles_company_id_fkey"
             columns: ["company_id"]
