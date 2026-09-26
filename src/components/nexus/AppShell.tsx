@@ -83,8 +83,8 @@ export function AppShell({
   if (ctx?.isNexusOwner) {
     nav.push(
       { to: "/nexus", label: t("nav.dashboard"), icon: LayoutDashboard },
-      ...(ctx.company?.kind === "STUDIO_NEXUS"
-        ? [{ to: "/estudio", label: "Estúdio Nexus", icon: LayoutDashboard as typeof Users },
+      ...(ctx.company
+        ? [{ to: "/estudio", label: ctx.company.name, icon: LayoutDashboard as typeof Users },
           { to: "/estudio/conteudos", label: "Conteúdos", icon: CalendarDays },
           { to: "/estudio/filiados", label: "Filiados", icon: Users },
           { to: "/estudio/contratos", label: "Contratos", icon: ScrollText },
