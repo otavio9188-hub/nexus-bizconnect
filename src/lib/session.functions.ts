@@ -159,8 +159,8 @@ export const getStudioDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ctx = await loadSessionContext(context.supabase, context.userId);
-    if (!ctx.activeCompanyId || ctx.company?.kind !== "STUDIO_NEXUS") {
-      throw new AppError("STUDIO_REQUIRED", "Selecione o Estúdio Nexus como empresa ativa.");
+    if (!ctx.activeCompanyId || !ctx.company) {
+      throw new AppError("COMPANY_REQUIRED", "Selecione uma empresa ativa para acessar o ERP.");
     }
 
     const companyId = ctx.activeCompanyId;
