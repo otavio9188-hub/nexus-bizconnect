@@ -83,7 +83,7 @@ export const listNexusCompanies = createServerFn({ method: "GET" })
       throw new AppError("FORBIDDEN", "Apenas administradores Nexus podem selecionar uma empresa.");
     }
 
-    // `kind` is part of the company schema and distinguishes the internal Estúdio Nexus tenant from client companies.
+    // `kind` remains available for compatibility; company selection is independent of tenant type.
     const { data, error } = await context.supabase
       .from("companies")
       .select("id, name, status, kind")
