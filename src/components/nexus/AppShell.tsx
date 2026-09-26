@@ -229,18 +229,15 @@ export function AppShell({
                       await setCompanyFn({ data: { companyId: company.id } });
                       await queryClient.invalidateQueries({ queryKey: ["session-context"] });
 
-                      // O Estúdio possui uma interface própria.
-                      if (company.kind === "STUDIO_NEXUS") {
-                        navigate({ to: "/estudio" });
-                      } else {
-                        navigate({ to: "/nexus" });
-                      }
+                      // Toda empresa selecionada pelo administrador Nexus abre o ERP da empresa.
+                      // O ambiente Nexus (administração da plataforma) permanece separado.
+                      navigate({ to: "/estudio" });
                     }}
                   >
                     <div className="min-w-0">
                       <div className="truncate">{company.name}</div>
                       <div className="text-[10px] uppercase text-muted-foreground">
-                        {company.kind === "STUDIO_NEXUS" ? "Estúdio Nexus" : "Cliente"}
+                        "Empresa"
                       </div>
                     </div>
                   </DropdownMenuItem>
