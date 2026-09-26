@@ -23,7 +23,7 @@ export const MODULES = [
   "employees",
   "company_settings",
   "audit_logs",
-  // Estúdio Nexus modules
+  // Módulos adicionais do ERP
   "affiliates",
   "contracts",
   "content",

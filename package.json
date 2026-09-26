@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "qa": "node scripts/nexus-qa.mjs"
+    "qa": "node scripts/nexus-qa.mjs",
+    "bootstrap:owner": "node scripts/bootstrap-nexus-owner.mjs",
+    "db:migrate": "drizzle-kit migrate",
+    "prebuild": "node scripts/run-lovable-migrations.mjs"
   },
   "overrides": {
     "rolldown": "1.2.1"

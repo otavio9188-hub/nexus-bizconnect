@@ -20,7 +20,7 @@ async function syncCash(supabaseAdmin:any,row:any,userId:string,companyId:string
   if(row.status==="PAID"){
     const payload={company_id:companyId,type:"INCOME",category:"Recebimentos",description:row.description,amount:Number(row.amount),transaction_date:row.receipt_date||new Date().toISOString().slice(0,10),status:"PAID",reference_type:referenceType,reference_id:row.id,user_id:userId};
     if(existing?.id) await supabaseAdmin.from("cash_transactions").update(payload).eq("id",existing.id).eq("company_id",companyId);
-    else await supabaseAdmin.from("cash_transactions").insert(payload);
+    else await supabaseAdmin.from("cash_transactions").insert(payload as any);
   }else if(existing?.id){
     await supabaseAdmin.from("cash_transactions").delete().eq("id",existing.id).eq("company_id",companyId);
   }
@@ -40,7 +40,41 @@ export const listCashTransactions=createServerFn({method:"GET"}).middleware([req
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const {data,error}=await supabaseAdmin.from("cash_transactions").select("*").eq("company_id",ctx.activeCompanyId!).order("transaction_date",{ascending:false}).order("created_at",{ascending:false});
   if(error)throw new AppError("LIST_FAILED","Não foi possível carregar o fluxo de caixa.");
-  return data??[];
+
+  // Reconcilia comissões já marcadas como pagas que foram registradas antes
+  // da integração com o fluxo de caixa.
+  const {data:paidCommissions}=await supabaseAdmin
+    .from("commission_payments")
+    .select("id, amount, paid_at, notes")
+    .eq("company_id",ctx.activeCompanyId!)
+    .eq("status","PAID");
+
+  for(const commission of paidCommissions??[]){
+    const exists=(data??[]).some((tx:any)=>tx.reference_type==="commission_payments"&&tx.reference_id===commission.id);
+    if(!exists){
+      await supabaseAdmin.from("cash_transactions").insert({
+        company_id:ctx.activeCompanyId!,
+        type:"EXPENSE",
+        category:"Comissões",
+        description:"Comissão"+(commission.notes?" - "+commission.notes:""),
+        amount:Number(commission.amount),
+        transaction_date:commission.paid_at||new Date().toISOString().slice(0,10),
+        status:"PAID",
+        reference_type:"commission_payments",
+        reference_id:commission.id,
+        user_id:context.userId
+      } as any);
+    }
+  }
+
+  const {data:reconciled,error:reconciledError}=await supabaseAdmin
+    .from("cash_transactions")
+    .select("*")
+    .eq("company_id",ctx.activeCompanyId!)
+    .order("transaction_date",{ascending:false})
+    .order("created_at",{ascending:false});
+  if(reconciledError)throw new AppError("LIST_FAILED","Não foi possível carregar o fluxo de caixa.");
+  return reconciled??[];
 });
 
 export const listFinanceCustomers=createServerFn({method:"GET"}).middleware([requireSupabaseAuth]).handler(async({context})=>{
@@ -62,21 +96,21 @@ export const createReceivable=createServerFn({method:"POST"}).middleware([requir
   const ctx=await ctxFor(context.supabase,context.userId,"CREATE");
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const payload={...data,company_id:ctx.activeCompanyId!,customer_id:data.customer_id||null,due_date:data.due_date,receipt_date:data.status==="PAID"?(data.receipt_date||new Date().toISOString().slice(0,10)):null};
-  const {data:row,error}=await supabaseAdmin.from("accounts_receivable").insert(payload).select("*").single();
+  const {data:row,error}=await supabaseAdmin.from("accounts_receivable").insert(payload as any).select("*").single();
   if(error||!row)throw new AppError("CREATE_FAILED","Não foi possível criar a conta a receber.");
   await syncCash(supabaseAdmin,row,context.userId,ctx.activeCompanyId!);
   await writeAudit(supabaseAdmin,{company_id:ctx.activeCompanyId,user_id:context.userId,user_email:ctx.profile.email,action:"RECEIVABLE_CREATED",module:"finance",record_id:row.id,record_label:row.description,new_value:row});
   return row;
 });
 
-export const updateReceivable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>id.merge(schema)).handler(async({data,context})=>{
+export const updateReceivable=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((v:unknown)=>id.merge(schema).parse(v)).handler(async({data,context})=>{
   const ctx=await ctxFor(context.supabase,context.userId,"EDIT");
   const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
   const {data:before}=await supabaseAdmin.from("accounts_receivable").select("*").eq("id",data.id).eq("company_id",ctx.activeCompanyId!).maybeSingle();
   if(!before)throw new AppError("NOT_FOUND","Conta a receber não encontrada.");
   const {id:rid,...fields}=data;
   const payload={...fields,customer_id:fields.customer_id||null,receipt_date:fields.status==="PAID"?(fields.receipt_date||before.receipt_date||new Date().toISOString().slice(0,10)):null};
-  const {data:row,error}=await supabaseAdmin.from("accounts_receivable").update(payload).eq("id",rid).eq("company_id",ctx.activeCompanyId!).select("*").single();
+  const {data:row,error}=await supabaseAdmin.from("accounts_receivable").update(payload as any).eq("id",rid).eq("company_id",ctx.activeCompanyId!).select("*").single();
   if(error||!row)throw new AppError("UPDATE_FAILED","Não foi possível atualizar a conta.");
   await syncCash(supabaseAdmin,row,context.userId,ctx.activeCompanyId!);
   await writeAudit(supabaseAdmin,{company_id:ctx.activeCompanyId,user_id:context.userId,user_email:ctx.profile.email,action:"RECEIVABLE_UPDATED",module:"finance",record_id:rid,record_label:row.description,old_value:before,new_value:row});

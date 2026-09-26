@@ -85,6 +85,7 @@ export type Database = {
         Row: {
           amount: number
           company_id: string
+          contract_id: string | null
           created_at: string
           customer_id: string | null
           description: string
@@ -99,6 +100,7 @@ export type Database = {
         Insert: {
           amount: number
           company_id: string
+          contract_id?: string | null
           created_at?: string
           customer_id?: string | null
           description: string
@@ -113,6 +115,7 @@ export type Database = {
         Update: {
           amount?: number
           company_id?: string
+          contract_id?: string | null
           created_at?: string
           customer_id?: string | null
           description?: string
@@ -144,6 +147,59 @@ export type Database = {
             columns: ["sale_id"]
             isOneToOne: false
             referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliates: {
+        Row: {
+          company_id: string
+          created_at: string
+          document: string | null
+          email: string | null
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          pix_key: string | null
+          registered_at: string
+          status: Database["public"]["Enums"]["user_status"]
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          document?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          pix_key?: string | null
+          registered_at?: string
+          status?: Database["public"]["Enums"]["user_status"]
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          document?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          pix_key?: string | null
+          registered_at?: string
+          status?: Database["public"]["Enums"]["user_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliates_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
@@ -298,6 +354,70 @@ export type Database = {
           },
         ]
       }
+      commission_payments: {
+        Row: {
+          affiliate_id: string
+          amount: number
+          company_id: string
+          contract_id: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          notes: string | null
+          paid_at: string | null
+          status: Database["public"]["Enums"]["finance_status"]
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id: string
+          amount?: number
+          company_id: string
+          contract_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["finance_status"]
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string
+          amount?: number
+          company_id?: string
+          contract_id?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["finance_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_payments_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_payments_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           address: string | null
@@ -306,6 +426,7 @@ export type Database = {
           created_at: string
           email: string | null
           id: string
+          kind: Database["public"]["Enums"]["company_kind"]
           last_activity_at: string | null
           legal_name: string | null
           name: string
@@ -323,6 +444,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          kind?: Database["public"]["Enums"]["company_kind"]
           last_activity_at?: string | null
           legal_name?: string | null
           name: string
@@ -340,6 +462,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          kind?: Database["public"]["Enums"]["company_kind"]
           last_activity_at?: string | null
           legal_name?: string | null
           name?: string
@@ -351,6 +474,151 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      content_items: {
+        Row: {
+          caption: string | null
+          company_id: string
+          created_at: string
+          customer_id: string | null
+          format: string
+          id: string
+          media_url: string | null
+          notes: string | null
+          platform: string
+          published_at: string | null
+          responsible_user_id: string | null
+          scheduled_at: string | null
+          status: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          caption?: string | null
+          company_id: string
+          created_at?: string
+          customer_id?: string | null
+          format: string
+          id?: string
+          media_url?: string | null
+          notes?: string | null
+          platform: string
+          published_at?: string | null
+          responsible_user_id?: string | null
+          scheduled_at?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          caption?: string | null
+          company_id?: string
+          created_at?: string
+          customer_id?: string | null
+          format?: string
+          id?: string
+          media_url?: string | null
+          notes?: string | null
+          platform?: string
+          published_at?: string | null
+          responsible_user_id?: string | null
+          scheduled_at?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_items_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          affiliate_id: string | null
+          commission_percent: number
+          commission_value: number
+          company_id: string
+          created_at: string
+          customer_id: string | null
+          end_date: string | null
+          id: string
+          monthly_value: number
+          notes: string | null
+          service: string | null
+          start_date: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id?: string | null
+          commission_percent?: number
+          commission_value?: number
+          company_id: string
+          created_at?: string
+          customer_id?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_value?: number
+          notes?: string | null
+          service?: string | null
+          start_date?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string | null
+          commission_percent?: number
+          commission_value?: number
+          company_id?: string
+          created_at?: string
+          customer_id?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_value?: number
+          notes?: string | null
+          service?: string | null
+          start_date?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customers: {
         Row: {
@@ -593,6 +861,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_company_id: string | null
           company_id: string | null
           cpf: string | null
           created_at: string
@@ -608,6 +877,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          active_company_id?: string | null
           company_id?: string | null
           cpf?: string | null
           created_at?: string
@@ -623,6 +893,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          active_company_id?: string | null
           company_id?: string | null
           cpf?: string | null
           created_at?: string
@@ -638,6 +909,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_active_company_id_fkey"
+            columns: ["active_company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "profiles_company_id_fkey"
             columns: ["company_id"]
@@ -1055,6 +1333,7 @@ export type Database = {
     }
     Enums: {
       app_role: "NEXUS_OWNER" | "COMPANY_ADMIN" | "MANAGER" | "EMPLOYEE"
+      company_kind: "STUDIO_NEXUS" | "CLIENT"
       company_status: "ACTIVE" | "SUSPENDED" | "BLOCKED"
       doc_status: "DRAFT" | "COMPLETED" | "CANCELLED"
       finance_status: "PENDING" | "PAID" | "OVERDUE" | "CANCELLED"
@@ -1190,6 +1469,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["NEXUS_OWNER", "COMPANY_ADMIN", "MANAGER", "EMPLOYEE"],
+      company_kind: ["STUDIO_NEXUS", "CLIENT"],
       company_status: ["ACTIVE", "SUSPENDED", "BLOCKED"],
       doc_status: ["DRAFT", "COMPLETED", "CANCELLED"],
       finance_status: ["PENDING", "PAID", "OVERDUE", "CANCELLED"],

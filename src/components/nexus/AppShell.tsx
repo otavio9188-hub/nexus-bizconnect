@@ -12,9 +12,13 @@ import {
   LifeBuoy,
   LogOut,
   Menu,
+  Package,
   ScrollText,
   Settings,
   ShieldCheck,
+  ShoppingCart,
+  FileInput,
+  FileCheck2,
   Users,
   X,
 } from "lucide-react";
@@ -83,14 +87,18 @@ export function AppShell({
   if (ctx?.isNexusOwner) {
     nav.push(
       { to: "/nexus", label: t("nav.dashboard"), icon: LayoutDashboard },
-      ...(ctx.company?.kind === "STUDIO_NEXUS"
-        ? [{ to: "/estudio", label: "Estúdio Nexus", icon: LayoutDashboard as typeof Users },
+      ...(ctx.company
+        ? [{ to: "/estudio", label: ctx.company.name, icon: LayoutDashboard as typeof Users },
+          { to: "/produtos", label: "Produtos", icon: Package },
           { to: "/estudio/conteudos", label: "Conteúdos", icon: CalendarDays },
           { to: "/estudio/filiados", label: "Filiados", icon: Users },
           { to: "/estudio/contratos", label: "Contratos", icon: ScrollText },
           { to: "/estudio/comissoes", label: "Comissões", icon: CircleDollarSign },
           { to: "/estudio/financeiro", label: "Financeiro", icon: CircleDollarSign },
-          { to: "/estudio/fluxo-caixa", label: "Fluxo de Caixa", icon: WalletCards }]
+          { to: "/estudio/fluxo-caixa", label: "Fluxo de Caixa", icon: WalletCards },
+          { to: "/estudio/frente-caixa", label: "Frente de Caixa", icon: ShoppingCart },
+          { to: "/estudio/notas-entrada", label: "Notas de Entrada", icon: FileInput },
+          { to: "/estudio/notas-emitidas", label: "Notas Emitidas", icon: FileCheck2 }]
         : []),
       { to: "/nexus/empresas", label: t("nav.companies"), icon: Building2 },
       { to: "/nexus/usuarios", label: t("nav.users"), icon: Users },
@@ -99,10 +107,18 @@ export function AppShell({
     );
   } else if (ctx) {
     nav.push({ to: "/painel", label: t("nav.dashboard"), icon: LayoutDashboard });
+    if (can(ctx, "products", "VIEW"))
+      nav.push({ to: "/produtos", label: "Produtos", icon: Package });
     if (can(ctx, "customers", "VIEW"))
       nav.push({ to: "/clientes", label: t("nav.customers"), icon: Users });
     if (can(ctx, "employees", "VIEW"))
       nav.push({ to: "/funcionarios", label: t("nav.employees"), icon: Users });
+    if (can(ctx, "sales", "VIEW"))
+      nav.push({ to: "/estudio/frente-caixa", label: "Frente de Caixa", icon: ShoppingCart });
+    if (can(ctx, "fiscal", "VIEW")) {
+      nav.push({ to: "/estudio/notas-entrada", label: "Notas de Entrada", icon: FileInput });
+      nav.push({ to: "/estudio/notas-emitidas", label: "Notas Emitidas", icon: FileCheck2 });
+    }
     if (can(ctx, "audit_logs", "VIEW"))
       nav.push({ to: "/auditoria", label: t("nav.audit_logs"), icon: ScrollText });
     nav.push({ to: "/ajuda", label: t("nav.help"), icon: LifeBuoy });
@@ -116,7 +132,7 @@ export function AppShell({
     .toUpperCase();
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+    <div className="nexus-sidebar flex h-full flex-col text-sidebar-foreground">
       <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-5">
         <Logo />
         <button
@@ -127,24 +143,28 @@ export function AppShell({
           <X className="size-5" />
         </button>
       </div>
-      <div className="px-5 py-4">
+      <div className="px-4 py-5">
         <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
           {ctx?.isNexusOwner ? t("nav.platform") : (ctx?.company?.name ?? "")}
         </div>
       </div>
-      <nav className="flex-1 space-y-1 px-3">
+      <nav className="flex-1 space-y-1.5 px-3">
         {nav.map((item) => {
-          const active = pathname === item.to || pathname.startsWith(item.to + "/");
+          // Cada item representa uma seção própria. Comparar a rota exata
+          // evita que "/estudio" fique ativo junto com "/estudio/financeiro",
+          // "/estudio/comissoes", etc.
+          const active = pathname === item.to;
           return (
             <Link
               key={item.to}
               to={item.to}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${
+              className={`nexus-nav-item flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all ${
                 active
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
-                  : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  ? "font-medium"
+                  : "text-sidebar-foreground/75 hover:text-sidebar-accent-foreground"
               }`}
+              data-active={active ? "true" : "false"}
             >
               <item.icon className="size-4" />
               {item.label}
@@ -159,7 +179,7 @@ export function AppShell({
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="nexus-app-shell flex min-h-screen bg-background">
       <aside className="hidden w-64 shrink-0 md:block">
         <div className="fixed inset-y-0 w-64">{sidebar}</div>
       </aside>
@@ -172,7 +192,7 @@ export function AppShell({
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-card/90 px-4 backdrop-blur md:px-8">
+        <header className="nexus-header sticky top-0 z-30 flex h-[72px] items-center gap-3 border-b px-4 backdrop-blur-xl md:px-8 lg:px-10">
           <button className="md:hidden" onClick={() => setMobileOpen(true)} aria-label="Menu">
             <Menu className="size-5" />
           </button>
@@ -186,26 +206,54 @@ export function AppShell({
           {ctx?.isNexusOwner && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="max-w-48 gap-1 text-xs">
+                <Button variant="outline" size="sm" className="nexus-brand-outline max-w-48 gap-1 text-xs">
                   <Building2 className="size-3.5" />
-                  <span className="truncate">{ctx.company?.name ?? "Selecionar empresa"}</span>
+                  <span className="truncate">{ctx.company?.name ?? "Nexus — Administração"}</span>
                   <ChevronDown className="size-3" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuLabel>Empresa ativa</DropdownMenuLabel>
+              <DropdownMenuContent align="end" className="w-72">
+                <DropdownMenuLabel>Alternar ambiente</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={async () => {
+                    await setCompanyFn({ data: { companyId: null } });
+                    await queryClient.invalidateQueries({ queryKey: ["session-context"] });
+                    navigate({ to: "/nexus" });
+                  }}
+                >
+                  <div className="min-w-0">
+                    <div className="truncate">Nexus — Administração</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">
+                      Controle da plataforma
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {companiesQuery.isLoading && (
+                  <DropdownMenuItem disabled>Carregando empresas...</DropdownMenuItem>
+                )}
+                {companiesQuery.isError && (
+                  <DropdownMenuItem disabled>Não foi possível carregar as empresas</DropdownMenuItem>
+                )}
+                {!companiesQuery.isLoading && !companiesQuery.isError && companiesQuery.data?.length === 0 && (
+                  <DropdownMenuItem disabled>Nenhuma empresa cadastrada</DropdownMenuItem>
+                )}
                 {companiesQuery.data?.map((company) => (
                   <DropdownMenuItem
                     key={company.id}
                     onClick={async () => {
                       await setCompanyFn({ data: { companyId: company.id } });
                       await queryClient.invalidateQueries({ queryKey: ["session-context"] });
+
+                      // Toda empresa selecionada pelo administrador Nexus abre o ERP da empresa.
+                      // O ambiente Nexus (administração da plataforma) permanece separado.
+                      navigate({ to: "/estudio" });
                     }}
                   >
                     <div className="min-w-0">
                       <div className="truncate">{company.name}</div>
                       <div className="text-[10px] uppercase text-muted-foreground">
-                        {company.kind === "STUDIO_NEXUS" ? "Estúdio Nexus" : "Cliente"}
+                        "Empresa"
                       </div>
                     </div>
                   </DropdownMenuItem>
@@ -233,7 +281,7 @@ export function AppShell({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 rounded-full border bg-background py-1 pl-1 pr-3 text-sm hover:bg-accent">
+              <button className="nexus-brand-outline flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-sm hover:bg-accent">
                 <span className="flex size-7 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
                   {initials}
                 </span>
@@ -265,7 +313,8 @@ export function AppShell({
           </DropdownMenu>
         </header>
 
-        <main className="flex-1 p-4 md:p-8">
+        <main className="nexus-main flex-1 p-5 md:p-8 lg:p-10">
+          <div className="nexus-content mx-auto w-full max-w-[1500px]">
           {isLoading ? (
             <div className="space-y-3">
               <Skeleton className="h-9 w-56" />
@@ -278,6 +327,7 @@ export function AppShell({
           ) : (
             children
           )}
+          </div>
         </main>
       </div>
     </div>
