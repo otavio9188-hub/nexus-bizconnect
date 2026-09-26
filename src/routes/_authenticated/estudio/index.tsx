@@ -66,8 +66,8 @@ function StudioDashboard() {
 
   return (
     <AppShell
-      title="Estúdio Nexus"
-      description={query.data?.company?.name ?? "Gestão da operação do estúdio"}
+      title={query.data?.company?.name ?? "Empresa ativa"}
+      description="Gestão da operação da empresa"
     >
       {query.isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -78,8 +78,8 @@ function StudioDashboard() {
       ) : query.error ? (
         <Card>
           <CardContent className="p-6 text-sm text-destructive">
-            Não foi possível carregar o dashboard. Se você é administrador Nexus, selecione o
-            Estúdio Nexus como empresa ativa.
+            Não foi possível carregar o dashboard. Se você é administrador Nexus, selecione uma
+            empresa ativa.
           </CardContent>
         </Card>
       ) : (
