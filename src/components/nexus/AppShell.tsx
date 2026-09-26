@@ -12,6 +12,7 @@ import {
   LifeBuoy,
   LogOut,
   Menu,
+  Package,
   ScrollText,
   Settings,
   ShieldCheck,
@@ -88,6 +89,7 @@ export function AppShell({
       { to: "/nexus", label: t("nav.dashboard"), icon: LayoutDashboard },
       ...(ctx.company
         ? [{ to: "/estudio", label: ctx.company.name, icon: LayoutDashboard as typeof Users },
+          { to: "/produtos", label: "Produtos", icon: Package },
           { to: "/estudio/conteudos", label: "Conteúdos", icon: CalendarDays },
           { to: "/estudio/filiados", label: "Filiados", icon: Users },
           { to: "/estudio/contratos", label: "Contratos", icon: ScrollText },
@@ -105,6 +107,8 @@ export function AppShell({
     );
   } else if (ctx) {
     nav.push({ to: "/painel", label: t("nav.dashboard"), icon: LayoutDashboard });
+    if (can(ctx, "products", "VIEW"))
+      nav.push({ to: "/produtos", label: "Produtos", icon: Package });
     if (can(ctx, "customers", "VIEW"))
       nav.push({ to: "/clientes", label: t("nav.customers"), icon: Users });
     if (can(ctx, "employees", "VIEW"))
