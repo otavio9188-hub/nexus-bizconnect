@@ -230,6 +230,9 @@ export interface FileRoutesByTo {
   '/estudio/filiados': typeof AuthenticatedEstudioFiliadosRoute
   '/estudio/financeiro': typeof AuthenticatedEstudioFinanceiroRoute
   '/estudio/fluxo-caixa': typeof AuthenticatedEstudioFluxoCaixaRoute
+  '/estudio/frente-caixa': typeof AuthenticatedEstudioFrenteCaixaRoute
+  '/estudio/notas-entrada': typeof AuthenticatedEstudioNotasEntradaRoute
+  '/estudio/notas-emitidas': typeof AuthenticatedEstudioNotasEmitidasRoute
   '/nexus/auditoria': typeof AuthenticatedNexusAuditoriaRoute
   '/nexus/configuracoes': typeof AuthenticatedNexusConfiguracoesRoute
   '/nexus/empresas': typeof AuthenticatedNexusEmpresasRoute
@@ -282,6 +285,9 @@ export interface FileRouteTypes {
     | '/estudio/filiados'
     | '/estudio/financeiro'
     | '/estudio/fluxo-caixa'
+    | '/estudio/frente-caixa'
+    | '/estudio/notas-entrada'
+    | '/estudio/notas-emitidas'
     | '/nexus/auditoria'
     | '/nexus/configuracoes'
     | '/nexus/empresas'
@@ -306,6 +312,9 @@ export interface FileRouteTypes {
     | '/estudio/filiados'
     | '/estudio/financeiro'
     | '/estudio/fluxo-caixa'
+    | '/estudio/frente-caixa'
+    | '/estudio/notas-entrada'
+    | '/estudio/notas-emitidas'
     | '/nexus/auditoria'
     | '/nexus/configuracoes'
     | '/nexus/empresas'
@@ -331,6 +340,9 @@ export interface FileRouteTypes {
     | '/_authenticated/estudio/filiados'
     | '/_authenticated/estudio/financeiro'
     | '/_authenticated/estudio/fluxo-caixa'
+    | '/_authenticated/estudio/frente-caixa'
+    | '/_authenticated/estudio/notas-entrada'
+    | '/_authenticated/estudio/notas-emitidas'
     | '/_authenticated/nexus/auditoria'
     | '/_authenticated/nexus/configuracoes'
     | '/_authenticated/nexus/empresas'
@@ -472,6 +484,27 @@ declare module '@tanstack/react-router' {
       path: '/estudio/fluxo-caixa'
       fullPath: '/estudio/fluxo-caixa'
       preLoaderRoute: typeof AuthenticatedEstudioFluxoCaixaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/frente-caixa': {
+      id: '/_authenticated/estudio/frente-caixa'
+      path: '/estudio/frente-caixa'
+      fullPath: '/estudio/frente-caixa'
+      preLoaderRoute: typeof AuthenticatedEstudioFrenteCaixaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/notas-entrada': {
+      id: '/_authenticated/estudio/notas-entrada'
+      path: '/estudio/notas-entrada'
+      fullPath: '/estudio/notas-entrada'
+      preLoaderRoute: typeof AuthenticatedEstudioNotasEntradaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio/notas-emitidas': {
+      id: '/_authenticated/estudio/notas-emitidas'
+      path: '/estudio/notas-emitidas'
+      fullPath: '/estudio/notas-emitidas'
+      preLoaderRoute: typeof AuthenticatedEstudioNotasEmitidasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/nexus/': {
