@@ -78,6 +78,7 @@ export const createCompany = createServerFn({ method: "POST" })
         city: data.city || null,
         state: data.state || null,
         zip_code: data.zip_code || null,
+        kind: "CLIENT",
       })
       .select("*")
       .single();
